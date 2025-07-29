@@ -1,29 +1,65 @@
 import { useMemo } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router";
+import {
+  type ActionFunction,
+  type LoaderFunction,
+  RouterProvider,
+  createBrowserRouter
+} from "react-router";
 
-import { Layout } from "./layout";
-import { BooksRoot } from "./routes/books/root";
-import { HomeRoot } from "./routes/home/root";
+import { type QueryClient, useQueryClient } from "@tanstack/react-query";
 
-const createAppRouter = () =>
+import { ProtectedRoute } from "./helpers/protected-route";
+import Root from "./routes/root";
+
+type RouteModule = {
+  clientLoader?: (queryClient: QueryClient) => LoaderFunction;
+  clientAction?: (queryClient: QueryClient) => ActionFunction;
+  default?: React.ComponentType;
+  [key: string]: unknown;
+};
+
+// Route module that dynamically import and convert into a React Router route configuration
+const convert = (queryClient: QueryClient) => (m: RouteModule) => {
+  const { clientLoader, clientAction, default: Component, ...rest } = m;
+  return {
+    ...rest,
+    loader: clientLoader?.(queryClient),
+    action: clientAction?.(queryClient),
+    Component: Component || (() => <div>Loading!!!...</div>)
+  };
+};
+
+const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
-      path: "/",
-      element: <Layout />,
+      // unprotected route
+      path: "/auth",
       children: [
         {
-          index: true,
-          element: <HomeRoot />
+          path: "login",
+          lazy: () => import("./routes/auth/login").then(convert(queryClient))
         },
         {
-          path: "books",
-          element: <BooksRoot />
+          path: "register",
+          lazy: () =>
+            import("./routes/auth/register").then(convert(queryClient))
         }
       ]
+    },
+    {
+      // protected route
+      path: "/",
+      element: (
+        <ProtectedRoute>
+          <Root />
+        </ProtectedRoute>
+      )
+      // children: []
     }
   ]);
 
 export const AppRouter = () => {
-  const router = useMemo(() => createAppRouter(), []);
+  const queryClient = useQueryClient();
+  const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
   return <RouterProvider router={router} />;
 };

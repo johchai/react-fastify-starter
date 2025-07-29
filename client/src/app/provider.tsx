@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -17,6 +17,10 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const queryClient = new QueryClient();
+
+  useEffect(() => {
+    console.log("FETCHING USER DATA ON INIT!");
+  }, []);
 
   return (
     <Suspense
