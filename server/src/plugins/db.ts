@@ -1,0 +1,29 @@
+import { FastifyInstance } from "fastify";
+import fp from "fastify-plugin";
+import { open } from "sqlite";
+import sqlite3 from "sqlite3";
+
+declare module "fastify" {
+  interface FastifyInstance {
+    db: Awaited<ReturnType<typeof open>>;
+  }
+}
+
+export default fp(async function (fastify: FastifyInstance) {
+  const db = await open({
+    filename: "./db/app.db", // your SQLite file
+    driver: sqlite3.Database,
+  });
+
+  // Create users table if not exists
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      deleted_at TEXT
+    );
+  `);
+
+  fastify.decorate("db", db);
+});
