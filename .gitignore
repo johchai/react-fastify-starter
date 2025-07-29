@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+.env
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# SQLite (if used)
+db/*.db
+
+# MacOS cruft
+.DS_Store
+
+# VSCode or JetBrains
+.vscode/
+.idea/
+
+# Optional npm debug logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
