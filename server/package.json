@@ -23,6 +23,7 @@
     "@tsconfig/node14": "^14.1.4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
+    "json-schema-to-ts": "^3.1.1",
     "typescript": "^5.8.3"
   }
 }

@@ -30,24 +30,23 @@ export const login = async (fastify: FastifyInstance) => {
       return;
     }
 
-    // Generate JWT token
-    const newAccessToken = fastify.jwt.sign(
-      {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      }
-      // app.config.ACCESS_TOKEN_SECRET
-      // duration: "15m" // 15 minutes
-    );
+    // use standalone JWT access token
+    const test = fastify.accessJWT.sign({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
 
-    const newRefreshToken = fastify.jwt.sign(
-      {
-        id: user.id,
-      }
-      // app.config.ACCESS_TOKEN_SECRET
-      // duration: "15m" // 15 minutes
-    );
+    // Generate JWT token
+    const newAccessToken = fastify.jwt.sign({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+
+    const newRefreshToken = fastify.jwt.sign({
+      id: user.id,
+    });
 
     // Set the JWT token in a secure cookie
     return (
