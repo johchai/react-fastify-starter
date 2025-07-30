@@ -10,6 +10,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/env": "^5.0.2",
+    "@fastify/jwt": "^9.1.0",
+    "bcrypt": "^6.0.0",
     "fastify": "^5.4.0",
     "fastify-plugin": "^5.0.1",
     "sqlite": "^5.1.1",
@@ -17,6 +21,7 @@
   },
   "devDependencies": {
     "@tsconfig/node14": "^14.1.4",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
     "typescript": "^5.8.3"
   }
