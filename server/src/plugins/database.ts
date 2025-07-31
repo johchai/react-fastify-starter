@@ -11,7 +11,7 @@ declare module "fastify" {
 
 export default fp(async function (fastify: FastifyInstance) {
   const db = await open({
-    filename: "./db/app.db", // your SQLite file
+    filename: "./db/app.db",
     driver: sqlite3.Database,
   });
 
@@ -22,7 +22,7 @@ export default fp(async function (fastify: FastifyInstance) {
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       hashed_password TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       deleted_at TEXT
     );
   `);

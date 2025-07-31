@@ -1,37 +1,47 @@
+import { Type, Static } from "@sinclair/typebox";
 import { FastifyInstance } from "fastify";
+import bcrypt from "bcrypt";
+
+const CreateUserSchema = Type.Object({
+  name: Type.String({ minLength: 2 }),
+  email: Type.String({ format: "email" }),
+  password: Type.String({ minLength: 6 }),
+});
 
 export default async function createUser(fastify: FastifyInstance) {
-  fastify.post("/", async (request, reply) => {
-    const { name, email } = request.body as { name: string; email: string };
+  fastify.post(
+    "/",
+    {
+      schema: {
+        body: CreateUserSchema,
+      },
+    },
+    async (request, reply) => {
+      const { name, email, password } = request.body as Static<
+        typeof CreateUserSchema
+      >;
 
-    // Validate the input
-    if (!name || typeof name !== "string" || name.trim() === "") {
-      reply.code(400).send({ error: "Invalid name" });
-      return;
+      // Check if the user already exists
+      const existingUser = await fastify.db.get(
+        "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
+        [email]
+      );
+
+      if (existingUser) {
+        reply.code(409).send({ error: "User with this email already exists" });
+        return;
+      }
+
+      // hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert the new user into the database
+      const result = await fastify.db.run(
+        "INSERT INTO users (name, email, hashed_password) VALUES (?, ?, ?)",
+        [name, email, hashedPassword]
+      );
+
+      reply.code(201).send({ id: result.lastID, name, email });
     }
-
-    if (!email || typeof email !== "string" || !/\S+@\S+\.\S+/.test(email)) {
-      reply.code(400).send({ error: "Invalid email" });
-      return;
-    }
-
-    // Check if the user already exists
-    const existingUser = await fastify.db.get(
-      "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
-      [email]
-    );
-
-    if (existingUser) {
-      reply.code(409).send({ error: "User with this email already exists" });
-      return;
-    }
-
-    // Insert the new user into the database
-    const result = await fastify.db.run(
-      "INSERT INTO users (name, email) VALUES (?, ?)",
-      [name, email]
-    );
-
-    reply.code(201).send({ id: result.lastID, name, email });
-  });
+  );
 }
