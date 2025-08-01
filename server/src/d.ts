@@ -7,19 +7,12 @@ declare module "fastify" {
     // env config
     config: EnvSchema;
     // JWT plugins - access
-    accessJWT: {
-      sign: (payload: JWTPayload, options?: FastifyJWTOptions) => string;
-      verify: <T = JWTPayload>(token: string, options?: FastifyJWTOptions) => T;
-      decode: <T = JWTPayload>(token: string) => T | null;
-    };
+    accessSign: (payload: JWTPayload, options?: FastifyJWTOptions) => string;
+    // verify: <T = JWTPayload>(token: string, options?: FastifyJWTOptions) => T;
+    // decode: <T = JWTPayload>(token: string) => T | null;
     // JWT plugins - refresh
-    refreshJWT: {
-      sign: (payload: JWTPayload, options?: FastifyJWTOptions) => string;
-      verify: <T = JWTPayload>(
-        token: string,
-        options?: FastifyJwtVerifyOptions
-      ) => T;
-      decode: <T = JWTPayload>(token: string) => T | null;
-    };
+    refreshSign: (payload: JWTPayload, options?: FastifyJWTOptions) => string;
   }
 }
+
+declare module "fastify" {}
