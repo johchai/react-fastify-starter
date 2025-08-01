@@ -24,26 +24,21 @@ export const login = async (fastify: FastifyInstance) => {
         [email]
       ); // TODO: typecheck this
 
+      // Check if user exists and password matches
       if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
-        reply
-          .code(401)
-          .send({ error: "User not found or invalid credentials" });
-        return;
+        reply.sendFail(401, "User not found or invalid credentials");
       }
 
+      // sign JWT token - access
       const access_token = await reply.authJwtSign({
         id: user.id,
         email: user.email,
         name: user.name,
       });
 
+      // sign JWT token (keep it at minimum) - refresh
       const refresh_token = await reply.refreshJwtSign({
         id: user.id,
-      });
-
-      console.log("Generated tokens:", {
-        access_token,
-        refresh_token,
       });
 
       reply.setCookie("accessToken", access_token, {
@@ -54,15 +49,20 @@ export const login = async (fastify: FastifyInstance) => {
         // sameSite: true, // alternative CSRF protection,
       });
 
-      reply.setCookie("refreshToken", refresh_token, {});
+      reply.setCookie("refreshToken", refresh_token, {
+        // domain: app.config.DOMAIN,
+        path: "/",
+        // secure: request.protocol === "https", // send cookie over HTTPS only
+        httpOnly: true,
+        // sameSite: true, // alternative CSRF protection,
+      });
 
-      return reply.send({
+      return reply.sendSuccess("Login successful", {
         user: {
           id: user.id,
           name: user.name,
           email: user.email,
         },
-        message: "Login successful",
       });
     }
   );

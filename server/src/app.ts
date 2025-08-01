@@ -1,20 +1,16 @@
-// server/src/app.ts
-
 import Fastify from "fastify";
-import jwt from "@fastify/jwt";
 
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 
 import databasePlugin from "./plugins/database";
-// import jwtAcessPlugin from "./plugins/jwt-access";
-// import jwtRefreshPlugin from "./plugins/jwt-refresh";
 
 import fCookie from "@fastify/cookie";
 import fEnv from "@fastify/env";
 
 import { envSchema } from "./lib/env";
 import JWTPlugin from "./plugins/jwt";
+import replyPlugin from "./plugins/reply";
 
 const app = Fastify({ logger: true });
 
@@ -26,6 +22,9 @@ const start = async () => {
       schema: envSchema,
       dotenv: true,
     });
+
+    // Register reply and request decorators for JWT
+    await app.register(replyPlugin);
 
     // Register cookie plugin
     await app.register(fCookie);
