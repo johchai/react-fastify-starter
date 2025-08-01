@@ -34,11 +34,15 @@ declare module "fastify" {
   }
 }
 
-const JWTPlugin: FastifyPluginAsync = fp(async (server) => {
+const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.ACCESS_TOKEN_SECRET,
     sign: {
       expiresIn: "15m", // Short-lived access tokens
+    },
+    cookie: {
+      cookieName: "accessToken",
+      signed: false,
     },
     namespace: "auth",
     jwtVerify: "authJwtVerify",
@@ -60,4 +64,4 @@ const JWTPlugin: FastifyPluginAsync = fp(async (server) => {
   });
 });
 
-export default JWTPlugin;
+export default jwtPlugin;

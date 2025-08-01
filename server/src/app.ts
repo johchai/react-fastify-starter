@@ -9,8 +9,10 @@ import fCookie from "@fastify/cookie";
 import fEnv from "@fastify/env";
 
 import { envSchema } from "./lib/env";
-import JWTPlugin from "./plugins/jwt";
+import jwtPlugin from "./plugins/jwt";
 import replyPlugin from "./plugins/reply";
+import authPlugin from "./plugins/auth";
+import postRoutes from "./routes/posts";
 
 const app = Fastify({ logger: true });
 
@@ -30,14 +32,16 @@ const start = async () => {
     await app.register(fCookie);
 
     // Register JWT plugin
-    await app.register(JWTPlugin);
+    await app.register(jwtPlugin);
+    await app.register(authPlugin);
 
     // Register your DB
     await app.register(databasePlugin);
 
     // Register your routes
-    await app.register(userRoutes, { prefix: "/users" });
     await app.register(authRoutes, { prefix: "/auth" });
+    await app.register(userRoutes, { prefix: "/users" });
+    await app.register(postRoutes, { prefix: "/posts" });
 
     // Start server
     await app.listen({ port: Number(app.config.PORT) });
