@@ -1,5 +1,8 @@
 import { TSchema, Type } from "@sinclair/typebox";
 
+// SUGGESTION 1: MOVE ALL THESE TO /UTILS
+// SUGGESTION 2: MOVE ALL THE OTHERS TO /ROUTES/*
+
 export const BaseSuccess = <T extends TSchema>(dataSchema: T) =>
   Type.Object({
     status: Type.Literal("success"),

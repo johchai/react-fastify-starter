@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-import { AuthSchemas, RawUserSchema } from "@server/schemas";
+import { AuthSchemas, RawUser } from "@server/schemas";
 
 import { Static } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
@@ -24,52 +24,60 @@ export const login = async (fastify: FastifyInstance) => {
         typeof AuthSchemas.Login.Body
       >;
 
-      // Fetch user from the database
-      const user = (await fastify.db.get(
-        "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
-        [email]
-      )) as Static<typeof RawUserSchema>;
+      try {
+        // Fetch user from the database
+        const user = (await fastify.db.get(
+          "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
+          [email]
+        )) as Static<typeof RawUser>;
 
-      // Check if user exists and password matches
-      if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
-        reply.sendFail(401, "User not found or invalid credentials");
-      }
-
-      // sign JWT token - access
-      const access_token = await reply.authJwtSign({
-        id: user.id,
-        email: user.email,
-        name: user.name
-      });
-
-      // sign JWT token (keep it at minimum) - refresh
-      const refresh_token = await reply.refreshJwtSign({
-        id: user.id
-      });
-
-      reply.setCookie("accessToken", access_token, {
-        domain: fastify.config.DOMAIN,
-        path: "/",
-        // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
-        sameSite: true
-      });
-
-      reply.setCookie("refreshToken", refresh_token, {
-        domain: fastify.config.DOMAIN,
-        path: "/",
-        // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
-        sameSite: true
-      });
-
-      return reply.sendSuccess("Login successful", {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email
+        // Check if user exists and password matches
+        if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
+          reply.sendFail(401, "User not found or invalid credentials");
         }
-      });
+
+        // sign JWT token - access
+        const access_token = await reply.authJwtSign({
+          id: user.id,
+          email: user.email,
+          name: user.name
+        });
+
+        // sign JWT token (keep it at minimum) - refresh
+        const refresh_token = await reply.refreshJwtSign({
+          id: user.id
+        });
+
+        if (!access_token || !refresh_token) {
+          return reply.sendFail(500, "Failed to generate tokens");
+        }
+
+        reply.setCookie("accessToken", access_token, {
+          domain: fastify.config.DOMAIN,
+          path: "/",
+          // secure: request.protocol === "https", // send cookie over HTTPS only
+          httpOnly: true,
+          sameSite: true
+        });
+
+        reply.setCookie("refreshToken", refresh_token, {
+          domain: fastify.config.DOMAIN,
+          path: "/",
+          // secure: request.protocol === "https", // send cookie over HTTPS only
+          httpOnly: true,
+          sameSite: true
+        });
+
+        return reply.sendSuccess("Login successful", {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }
+        });
+      } catch (err) {
+        return reply.sendError("Failed to login. Please try again later.", 500);
+      }
     }
   );
 };

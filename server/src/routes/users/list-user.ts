@@ -1,26 +1,41 @@
 import { FastifyInstance } from "fastify";
 
-import { Static, Type } from "@sinclair/typebox";
+import { User, UserSchemas } from "@server/schemas";
 
-export const ListUserSchema = Type.Object({
-  id: Type.Number(),
-  name: Type.String(),
-  email: Type.String({ format: "email" })
-});
+import { Static } from "@sinclair/typebox";
 
 export const listUser = async (fastify: FastifyInstance) => {
   fastify.get(
     "/",
     {
       schema: {
-        tags: ["Users"]
+        tags: ["Users"],
+        response: {
+          200: UserSchemas.GetAll.Response,
+          400: UserSchemas.GetByID.Fail,
+          404: UserSchemas.GetByID.Error
+        }
       }
     },
-    async (request, reply) => {
-      const users = (await fastify.db.all(
-        "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
-      )) as Static<typeof ListUserSchema>[];
-      reply.send(users);
+    async (_request, reply) => {
+      try {
+        const users = (await fastify.db.all(
+          "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
+        )) as Static<typeof User>[];
+
+        return reply.sendSuccess("Users retrieved successfully", {
+          users: users.map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }))
+        });
+      } catch (err) {
+        return reply.sendError(
+          "Failed to retrieve users. Please try again later.",
+          500
+        );
+      }
     }
   );
 };

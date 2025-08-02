@@ -1,33 +1,58 @@
 import { FastifyInstance } from "fastify";
 
+import { User, UserSchemas } from "@server/schemas";
+
+import { Static } from "@sinclair/typebox";
+
 export const removeUser = async (fastify: FastifyInstance) => {
-  fastify.patch(
-    "/:id/delete",
+  fastify.delete(
+    "/:id",
     {
       schema: {
-        tags: ["Users"]
+        tags: ["Users"],
+        params: UserSchemas.RemoveUser.Params,
+        response: {
+          200: UserSchemas.RemoveUser.Response,
+          404: UserSchemas.RemoveUser.Fail,
+          500: UserSchemas.RemoveUser.Error
+        }
       }
     },
     async (request, reply) => {
-      const { id } = request.params as { id: string };
+      const { id } = request.params as Static<
+        typeof UserSchemas.RemoveUser.Params
+      >;
 
-      // Validate the ID format
-      if (!/^\d+$/.test(id)) {
-        reply.code(400).send({ error: "Invalid user ID format" });
-        return;
+      try {
+        const result = await fastify.db.run(
+          "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL",
+          [id]
+        );
+
+        if (result.changes === 0) {
+          reply.code(404).send({ error: "User not found or already deleted" });
+          return;
+        }
+
+        // Fetch the updated user
+        const user = (await fastify.db.get(
+          "SELECT id, name, email, deleted_at FROM users WHERE id = ?",
+          [id]
+        )) as Static<typeof User>;
+
+        return reply.sendSuccess("User removed successfully", {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }
+        });
+      } catch (err) {
+        return reply.sendError(
+          "Failed to remove user. Please try again later.",
+          500
+        );
       }
-
-      const result = await fastify.db.run(
-        "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL",
-        [id]
-      );
-
-      if (result.changes === 0) {
-        reply.code(404).send({ error: "User not found or already deleted" });
-        return;
-      }
-
-      reply.send({ message: "User removed successfully" });
     }
   );
 };

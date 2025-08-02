@@ -1,11 +1,8 @@
 import { FastifyInstance } from "fastify";
 
-import { Static, Type } from "@sinclair/typebox";
+import { PostSchemas } from "@server/schemas";
 
-const CreatePostSchema = Type.Object({
-  title: Type.String({ minLength: 1, maxLength: 100 }),
-  content: Type.String({ minLength: 1, maxLength: 500 })
-});
+import { Static } from "@sinclair/typebox";
 
 export const createPost = async (fastify: FastifyInstance) => {
   fastify.addHook("preHandler", async (request, reply) => {
@@ -16,30 +13,34 @@ export const createPost = async (fastify: FastifyInstance) => {
     "/",
     {
       schema: {
-        body: CreatePostSchema,
-        tags: ["Posts"]
+        tags: ["Posts"],
+        body: PostSchemas.Create.Body,
+        response: {
+          201: PostSchemas.Create.Response,
+          400: PostSchemas.Create.Fail,
+          500: PostSchemas.Create.Error
+        }
       }
     },
     async (request, reply) => {
       const { title, content } = request.body as Static<
-        typeof CreatePostSchema
+        typeof PostSchemas.Create.Body
       >;
+
       try {
         // Simulate post creation logic (e.g., saving to a database)
         const postId = Math.floor(Math.random() * 1000); // Mock post ID
         return reply.sendSuccess("Post created successfully", {
-          id: postId,
-          title,
-          content
+          post: {
+            id: postId,
+            title,
+            content
+          }
         });
       } catch (err) {
-        fastify.log.error(err);
-        return reply.sendFail(
-          500,
+        return reply.sendError(
           "Failed to create post. Please try again later.",
-          {
-            error: err instanceof Error ? err.message : "Unknown error"
-          }
+          500
         );
       }
     }

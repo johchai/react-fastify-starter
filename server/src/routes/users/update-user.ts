@@ -1,57 +1,62 @@
 import { FastifyInstance } from "fastify";
 
-export const updateUser = (fastify: FastifyInstance) => {
+import { UserSchemas } from "@server/schemas";
+
+import { Static } from "@sinclair/typebox";
+import bcrypt from "bcrypt";
+
+export const updateUser = async (fastify: FastifyInstance) => {
+  fastify.addHook("preHandler", async (request, reply) => {
+    fastify.verifyJWT(request, reply);
+  });
+
   fastify.patch(
     "/:id",
     {
       schema: {
-        tags: ["Users"]
+        tags: ["Users"],
+        body: UserSchemas.UpdateUser.Body,
+        params: UserSchemas.UpdateUser.Params,
+        response: {
+          200: UserSchemas.UpdateUser.Response,
+          404: UserSchemas.UpdateUser.Fail,
+          500: UserSchemas.UpdateUser.Error
+        }
       }
     },
     async (request, reply) => {
-      const { id } = request.params as { id: string };
-      const { name, email } = request.body as {
-        name: string;
-        email: string;
-      };
+      const { id } = request.params as Static<
+        typeof UserSchemas.UpdateUser.Params
+      >;
+      const { name, email, password } = request.body as Static<
+        typeof UserSchemas.UpdateUser.Body
+      >;
 
-      // Validate the ID format
-      if (!/^\d+$/.test(id)) {
-        reply.code(400).send({ error: "Invalid user ID format" });
-        return;
-      }
+      try {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Validate the input
-      if (!name || typeof name !== "string" || name.trim() === "") {
-        reply.code(400).send({ error: "Invalid name" });
-        return;
-      }
+        const result = await fastify.db.run(
+          "UPDATE users SET name = ?, email = ?, hashed_password = ? WHERE id = ? AND deleted_at IS NULL",
+          [name, email, hashedPassword, id]
+        );
 
-      // Validate the email format
-      if (!email || typeof email !== "string" || !/\S+@\S+\.\S+/.test(email)) {
-        reply.code(400).send({ error: "Invalid email" });
-        return;
-      }
-
-      // Insert the new updated user into the database
-      const result = await fastify.db.run(
-        "UPDATE users SET name = ?, email = ? WHERE id = ? AND deleted_at IS NULL",
-        [name, email, id]
-      );
-
-      if (result.changes === 0) {
-        reply.code(404).send({ error: "User not found or already updated" });
-        return;
-      }
-
-      reply.send({
-        message: "User updated successfully",
-        user: {
-          id,
-          name,
-          email
+        if (result.changes === 0) {
+          return reply.sendFail(404, "User not found or already deleted");
         }
-      });
+
+        return reply.sendSuccess("User updated successfully", {
+          user: {
+            id,
+            name,
+            email
+          }
+        });
+      } catch (err) {
+        return reply.sendError(
+          "Failed to update user. Please try again later.",
+          500
+        );
+      }
     }
   );
 };

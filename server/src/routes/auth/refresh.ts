@@ -19,6 +19,12 @@ export const refresh = async (fastify: FastifyInstance) => {
         await request.refreshJwtVerify();
         const access_token = await reply.authJwtSign({});
         const refreshToken = await reply.refreshJwtSign({});
+
+        if (!access_token || !refreshToken) {
+          return reply.sendFail(401, "Unauthorized: Invalid or expired token");
+        }
+
+        // Set cookies for access and refresh tokens
         reply.setCookie("refreshToken", refreshToken, {
           domain: fastify.config.DOMAIN,
           path: "/",
@@ -33,9 +39,9 @@ export const refresh = async (fastify: FastifyInstance) => {
           httpOnly: true,
           sameSite: true
         });
+
         return reply.sendSuccess("Token refreshed successfully");
       } catch (err) {
-        fastify.log.error(err);
         return reply.sendFail(401, "Unauthorized: Invalid or expired token");
       }
     }
