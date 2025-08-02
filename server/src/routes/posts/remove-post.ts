@@ -8,6 +8,7 @@ export const removePost = async (fastify: FastifyInstance) => {
   fastify.delete(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
         params: PostSchemas.RemovePost.Params,

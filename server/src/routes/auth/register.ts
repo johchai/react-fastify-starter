@@ -1,28 +1,28 @@
 import { FastifyInstance } from "fastify";
 
-import { RawUser, UserSchemas } from "@server/schemas";
+import { AuthSchemas, RawUser } from "@server/schemas";
 
 import { Static } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
 
-export const createUser = async (fastify: FastifyInstance) => {
+export const register = async (fastify: FastifyInstance) => {
   fastify.post(
-    "/",
+    "/register",
     {
+      preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
-        tags: ["Users"],
-        body: UserSchemas.Create.Body,
+        tags: ["Auth"],
+        body: AuthSchemas.Register.Body,
         response: {
-          201: UserSchemas.Create.Response,
-          400: UserSchemas.Create.Fail,
-          409: UserSchemas.Create.Fail,
-          500: UserSchemas.Create.Error
+          200: AuthSchemas.Register.Response,
+          401: AuthSchemas.Register.Fail,
+          500: AuthSchemas.Register.Error
         }
       }
     },
     async (request, reply) => {
-      const { name, email, password } = request.body as Static<
-        typeof UserSchemas.Create.Body
+      const { name, email, password, role } = request.body as Static<
+        typeof AuthSchemas.Register.Body
       >;
 
       try {
@@ -56,15 +56,16 @@ export const createUser = async (fastify: FastifyInstance) => {
 
         // No existing user — insert new
         const result = await fastify.db.run(
-          "INSERT INTO users (name, email, hashed_password) VALUES (?, ?, ?)",
-          [name, email, hashedPassword]
+          "INSERT INTO users (name, email, hashed_password, role) VALUES (?, ?, ?, ?)",
+          [name, email, hashedPassword, role]
         );
 
         return reply.sendSuccess("User created successfully", {
           user: {
             id: result.lastID,
             name,
-            email
+            email,
+            role
           }
         });
       } catch (err) {

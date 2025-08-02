@@ -8,6 +8,7 @@ export const removeUser = async (fastify: FastifyInstance) => {
   fastify.delete(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
         params: UserSchemas.RemoveUser.Params,

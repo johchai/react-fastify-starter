@@ -30,6 +30,7 @@ declare module "fastify" {
   }
 }
 
+// This plugin sets up JWT authentication for access and refresh tokens.
 export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.ACCESS_TOKEN_SECRET,

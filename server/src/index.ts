@@ -5,8 +5,8 @@ import fEnv from "@fastify/env";
 
 import { envSchema } from "@server/lib";
 import {
-  authPlugin,
   databasePlugin,
+  guardPlugin,
   jwtPlugin,
   replyPlugin,
   swaggerPlugin
@@ -29,7 +29,7 @@ const server = async () => {
     await app.register(replyPlugin);
     await app.register(fCookie);
     await app.register(jwtPlugin);
-    await app.register(authPlugin);
+    await app.register(guardPlugin);
     await app.register(databasePlugin);
 
     // routes entry point

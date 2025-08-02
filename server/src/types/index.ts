@@ -14,10 +14,21 @@ export interface JWTPayload {
   [key: string]: string | number | boolean | object;
 }
 
+export const RoleEnum = {
+  admin: "admin",
+  editor: "editor",
+  viewer: "viewer"
+} as const;
+
+export type Role =
+  | keyof typeof RoleEnum
+  | (typeof RoleEnum)[keyof typeof RoleEnum];
+
 export interface AccessTokenPayload {
   id: number;
   email: string;
   name: string;
+  role: Role;
   iat: number;
   exp: number;
 }

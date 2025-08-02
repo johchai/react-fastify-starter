@@ -9,16 +9,6 @@ export const User = Type.Object({
 });
 
 export const UserSchemas = {
-  Create: {
-    Body: Type.Object({
-      name: Type.String({ minLength: 3 }),
-      email: Type.String({ format: "email" }),
-      password: Type.String({ minLength: 8 })
-    }),
-    Response: BaseSuccess(Type.Object({ user: User })),
-    Fail: BaseFail(false),
-    Error: BaseError
-  },
   GetByID: {
     Params: Type.Object({
       id: Type.Number()

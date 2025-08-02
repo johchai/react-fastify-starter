@@ -8,6 +8,7 @@ export const listPost = async (fastify: FastifyInstance) => {
   fastify.get(
     "/",
     {
+      preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
         response: {

@@ -5,13 +5,10 @@ import { PostSchemas } from "@server/schemas";
 import { Static } from "@sinclair/typebox";
 
 export const createPost = async (fastify: FastifyInstance) => {
-  fastify.addHook("preHandler", async (request, reply) => {
-    fastify.verifyJWT(request, reply);
-  });
-
   fastify.post(
     "/",
     {
+      preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
         body: PostSchemas.Create.Body,

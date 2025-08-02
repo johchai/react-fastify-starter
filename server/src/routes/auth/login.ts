@@ -40,7 +40,8 @@ export const login = async (fastify: FastifyInstance) => {
         const access_token = await reply.authJwtSign({
           id: user.id,
           email: user.email,
-          name: user.name
+          name: user.name,
+          role: user.role
         });
 
         // sign JWT token (keep it at minimum) - refresh
@@ -72,7 +73,8 @@ export const login = async (fastify: FastifyInstance) => {
           user: {
             id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role: user.role
           }
         });
       } catch (err) {

@@ -6,13 +6,10 @@ import { Static } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
 
 export const updateUser = async (fastify: FastifyInstance) => {
-  fastify.addHook("preHandler", async (request, reply) => {
-    fastify.verifyJWT(request, reply);
-  });
-
   fastify.patch(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
         body: UserSchemas.UpdateUser.Body,

@@ -8,6 +8,7 @@ export const getUser = async (fastify: FastifyInstance) => {
   fastify.get(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
         params: UserSchemas.GetByID.Params,

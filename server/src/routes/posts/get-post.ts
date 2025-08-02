@@ -8,8 +8,9 @@ export const getPost = async (fastify: FastifyInstance) => {
   fastify.get(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
-        tags: ["Posts]"],
+        tags: ["Posts"],
         params: PostSchemas.GetByID.Params,
         response: {
           201: PostSchemas.GetByID.Response,

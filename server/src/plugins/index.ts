@@ -1,5 +1,5 @@
-export { authPlugin } from "./auth";
 export { databasePlugin } from "./database";
+export { guardPlugin } from "./guard";
 export { jwtPlugin } from "./jwt";
-export { replyPlugin } from "./reply";
 export { swaggerPlugin } from "./swagger";
+export { replyPlugin } from "./reply";

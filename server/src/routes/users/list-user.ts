@@ -8,6 +8,7 @@ export const listUser = async (fastify: FastifyInstance) => {
   fastify.get(
     "/",
     {
+      preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
         response: {

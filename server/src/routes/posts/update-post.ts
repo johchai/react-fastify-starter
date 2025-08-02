@@ -5,13 +5,10 @@ import { Post, PostSchemas } from "@server/schemas";
 import { Static } from "@sinclair/typebox";
 
 export const updatePost = async (fastify: FastifyInstance) => {
-  fastify.addHook("preHandler", async (request, reply) => {
-    fastify.verifyJWT(request, reply);
-  });
-
   fastify.patch(
     "/:id",
     {
+      preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
         body: PostSchemas.UpdatePost.Body,

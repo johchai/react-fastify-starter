@@ -10,6 +10,7 @@ declare module "fastify" {
   }
 }
 
+// This plugin sets up a SQLite database connection and initializes the schema for users and posts.
 export const databasePlugin: FastifyPluginAsync = fp(async (server) => {
   const db = await open({
     filename: "./db/app.db",
@@ -22,6 +23,7 @@ export const databasePlugin: FastifyPluginAsync = fp(async (server) => {
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       hashed_password TEXT NOT NULL,
+      role TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       deleted_at TEXT
     );

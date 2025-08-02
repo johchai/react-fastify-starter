@@ -15,6 +15,7 @@ declare module "fastify" {
   }
 }
 
+// This plugin provides custom response methods for Fastify replies.
 export const replyPlugin: FastifyPluginAsync = fp(async (server) => {
   const validateStatusCode = (code: number, type: "fail" | "error"): void => {
     if (type === "fail" && (code < 400 || code >= 500)) {
