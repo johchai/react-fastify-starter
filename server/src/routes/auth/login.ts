@@ -1,25 +1,9 @@
 import { FastifyInstance } from "fastify";
 
-import { Static, Type } from "@sinclair/typebox";
+import { AuthSchemas, RawUserSchema } from "@server/schemas";
+
+import { Static } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
-
-const LoginSchema = Type.Object({
-  email: Type.String({ format: "email" }),
-  password: Type.String({ minLength: 6 })
-});
-
-const Event = Type.Object({
-  status: Type.String(),
-  message: Type.String(),
-  data: Type.Object({
-    user: Type.Object({
-      id: Type.Number(),
-      name: Type.String(),
-      email: Type.String({ format: "email" })
-    })
-  }),
-  timestamp: Type.String({ format: "date-time" })
-});
 
 export const login = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -27,20 +11,24 @@ export const login = async (fastify: FastifyInstance) => {
     {
       schema: {
         tags: ["Auth"],
-        body: LoginSchema,
+        body: AuthSchemas.Login.Body,
         response: {
-          200: Event
+          200: AuthSchemas.Login.Response,
+          401: AuthSchemas.Login.Fail,
+          500: AuthSchemas.Login.Error
         }
       }
     },
     async (request, reply) => {
-      const { email, password } = request.body as Static<typeof LoginSchema>;
+      const { email, password } = request.body as Static<
+        typeof AuthSchemas.Login.Body
+      >;
 
       // Fetch user from the database
-      const user = await fastify.db.get(
+      const user = (await fastify.db.get(
         "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
         [email]
-      ); // TODO: typecheck this
+      )) as Static<typeof RawUserSchema>;
 
       // Check if user exists and password matches
       if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
@@ -60,19 +48,19 @@ export const login = async (fastify: FastifyInstance) => {
       });
 
       reply.setCookie("accessToken", access_token, {
-        // domain: app.config.DOMAIN,
+        domain: fastify.config.DOMAIN,
         path: "/",
         // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true
-        // sameSite: true, // alternative CSRF protection,
+        httpOnly: true,
+        sameSite: true
       });
 
       reply.setCookie("refreshToken", refresh_token, {
-        // domain: app.config.DOMAIN,
+        domain: fastify.config.DOMAIN,
         path: "/",
         // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true
-        // sameSite: true, // alternative CSRF protection,
+        httpOnly: true,
+        sameSite: true
       });
 
       return reply.sendSuccess("Login successful", {

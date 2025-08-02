@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@server/*": ["src/*"]
+      "@server/*": ["./src/*"]
     }
   },
   "include": ["src"]

@@ -37,7 +37,9 @@ const server = async () => {
 
     // start server
     await app.listen({ port: Number(app.config.PORT) });
-    console.log(`Server running at http://localhost:${app.config.PORT}`);
+    console.log(
+      `Server running at http://${app.config.DOMAIN}:${app.config.PORT}`
+    );
   } catch (err) {
     app.log.error(err);
     process.exit(1);

@@ -1,25 +1,7 @@
 import { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 
-interface SuccessResponse<T = any> {
-  status: "success";
-  message: string;
-  data: T;
-  timestamp: string;
-}
-
-interface FailResponse {
-  status: "fail";
-  message: string;
-  errors?: Record<string, string>;
-  timestamp: string;
-}
-
-interface ErrorResponse {
-  status: "error";
-  message: string;
-  timestamp: string;
-}
+import { ErrorResponse, FailResponse, SuccessResponse } from "@server/types";
 
 declare module "fastify" {
   interface FastifyReply {
