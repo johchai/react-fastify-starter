@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@tsconfig/node14": "^14.1.4",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
     "json-schema-to-ts": "^3.1.1",

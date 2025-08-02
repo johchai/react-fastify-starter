@@ -1,7 +1,8 @@
 import { FastifyInstance } from "fastify";
-import { usersRoute } from "./users";
-import { postsRoute } from "./posts";
+
 import { authRoute } from "./auth";
+import { postsRoute } from "./posts";
+import { usersRoute } from "./users";
 
 export default async (app: FastifyInstance) => {
   app.register(authRoute, { prefix: "auth" });

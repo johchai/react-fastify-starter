@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
+
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
@@ -12,7 +13,7 @@ declare module "fastify" {
 export const databasePlugin: FastifyPluginAsync = fp(async (server) => {
   const db = await open({
     filename: "./db/app.db",
-    driver: sqlite3.Database,
+    driver: sqlite3.Database
   });
 
   // Create users table if not exists

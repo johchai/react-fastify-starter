@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "pluginSearchDirs": false,
+  "singleQuote": false,
+  "semi": true,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "importOrder": [
+    "^fastify",
+    "^@fastify/(.*)$",
+    "^@server/(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@/assets/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

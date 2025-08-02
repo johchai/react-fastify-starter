@@ -1,9 +1,10 @@
-import { Type, Static } from "@sinclair/typebox";
 import { FastifyInstance } from "fastify";
+
+import { Static, Type } from "@sinclair/typebox";
 
 const CreatePostSchema = Type.Object({
   title: Type.String({ minLength: 1, maxLength: 100 }),
-  content: Type.String({ minLength: 1, maxLength: 500 }),
+  content: Type.String({ minLength: 1, maxLength: 500 })
 });
 
 export const createPost = async (fastify: FastifyInstance) => {
@@ -15,8 +16,8 @@ export const createPost = async (fastify: FastifyInstance) => {
     "/",
     {
       schema: {
-        body: CreatePostSchema,
-      },
+        body: CreatePostSchema
+      }
     },
     async (request, reply) => {
       const { title, content } = request.body as Static<
@@ -28,7 +29,7 @@ export const createPost = async (fastify: FastifyInstance) => {
         return reply.sendSuccess("Post created successfully", {
           id: postId,
           title,
-          content,
+          content
         });
       } catch (err) {
         fastify.log.error(err);
@@ -36,7 +37,7 @@ export const createPost = async (fastify: FastifyInstance) => {
           500,
           "Failed to create post. Please try again later.",
           {
-            error: err instanceof Error ? err.message : "Unknown error",
+            error: err instanceof Error ? err.message : "Unknown error"
           }
         );
       }

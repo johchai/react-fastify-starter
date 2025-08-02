@@ -1,5 +1,6 @@
-import fp from "fastify-plugin";
 import { FastifyPluginAsync } from "fastify";
+import fp from "fastify-plugin";
+
 import fastifyJWT, { FastifyJwtNamespace } from "@fastify/jwt";
 
 declare module "fastify" {
@@ -36,28 +37,28 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.ACCESS_TOKEN_SECRET,
     sign: {
-      expiresIn: "15m", // Short-lived access tokens
+      expiresIn: "15m" // Short-lived access tokens
     },
     cookie: {
       cookieName: "accessToken",
-      signed: false,
+      signed: false
     },
     namespace: "auth",
     jwtVerify: "authJwtVerify",
-    jwtSign: "authJwtSign",
+    jwtSign: "authJwtSign"
   });
 
   server.register(fastifyJWT, {
     secret: server.config.REFRESH_TOKEN_SECRET,
     sign: {
-      expiresIn: "7d", // Longer-lived refresh tokens
+      expiresIn: "7d" // Longer-lived refresh tokens
     },
     cookie: {
       cookieName: "refreshToken",
-      signed: false,
+      signed: false
     },
     namespace: "refresh",
     jwtVerify: "refreshJwtVerify",
-    jwtSign: "refreshJwtSign",
+    jwtSign: "refreshJwtSign"
   });
 });

@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
-import bcrypt from "bcrypt";
+
 import { Static, Type } from "@sinclair/typebox";
+import bcrypt from "bcrypt";
 
 const LoginSchema = Type.Object({
   email: Type.String({ format: "email" }),
-  password: Type.String({ minLength: 6 }),
+  password: Type.String({ minLength: 6 })
 });
 
 export const login = async (fastify: FastifyInstance) => {
@@ -12,8 +13,8 @@ export const login = async (fastify: FastifyInstance) => {
     "/login",
     {
       schema: {
-        body: LoginSchema,
-      },
+        body: LoginSchema
+      }
     },
     async (request, reply) => {
       const { email, password } = request.body as Static<typeof LoginSchema>;
@@ -33,19 +34,19 @@ export const login = async (fastify: FastifyInstance) => {
       const access_token = await reply.authJwtSign({
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.name
       });
 
       // sign JWT token (keep it at minimum) - refresh
       const refresh_token = await reply.refreshJwtSign({
-        id: user.id,
+        id: user.id
       });
 
       reply.setCookie("accessToken", access_token, {
         // domain: app.config.DOMAIN,
         path: "/",
         // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
+        httpOnly: true
         // sameSite: true, // alternative CSRF protection,
       });
 
@@ -53,7 +54,7 @@ export const login = async (fastify: FastifyInstance) => {
         // domain: app.config.DOMAIN,
         path: "/",
         // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
+        httpOnly: true
         // sameSite: true, // alternative CSRF protection,
       });
 
@@ -61,8 +62,8 @@ export const login = async (fastify: FastifyInstance) => {
         user: {
           id: user.id,
           name: user.name,
-          email: user.email,
-        },
+          email: user.email
+        }
       });
     }
   );

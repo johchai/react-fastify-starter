@@ -42,8 +42,8 @@ export const updateUser = (fastify: FastifyInstance) => {
       user: {
         id,
         name,
-        email,
-      },
+        email
+      }
     });
   });
 };

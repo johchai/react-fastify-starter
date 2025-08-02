@@ -50,7 +50,7 @@ export const replyPlugin: FastifyPluginAsync = fp(async (server) => {
       status: "success",
       message,
       data,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
 
     return this.code(200).send(response);
@@ -75,7 +75,7 @@ export const replyPlugin: FastifyPluginAsync = fp(async (server) => {
         status: "fail",
         message,
         timestamp: new Date().toISOString(),
-        ...(errors && { errors }),
+        ...(errors && { errors })
       };
 
       return this.code(code).send(response);
@@ -99,7 +99,7 @@ export const replyPlugin: FastifyPluginAsync = fp(async (server) => {
       const response: ErrorResponse = {
         status: "error",
         message,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       };
 
       return this.code(code).send(response);

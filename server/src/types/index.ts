@@ -1,4 +1,5 @@
 import { envSchema } from "@server/lib";
+
 import { FromSchema } from "json-schema-to-ts";
 
 declare module "fastify" {

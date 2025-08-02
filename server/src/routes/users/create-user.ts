@@ -1,11 +1,12 @@
-import { Type, Static } from "@sinclair/typebox";
 import { FastifyInstance } from "fastify";
+
+import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
 
 const CreateUserSchema = Type.Object({
   name: Type.String({ minLength: 2 }),
   email: Type.String({ format: "email" }),
-  password: Type.String({ minLength: 6 }),
+  password: Type.String({ minLength: 6 })
 });
 
 export const createUser = async (fastify: FastifyInstance) => {
@@ -13,8 +14,8 @@ export const createUser = async (fastify: FastifyInstance) => {
     "/",
     {
       schema: {
-        body: CreateUserSchema,
-      },
+        body: CreateUserSchema
+      }
     },
     async (request, reply) => {
       const { name, email, password } = request.body as Static<

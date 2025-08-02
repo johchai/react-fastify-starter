@@ -10,14 +10,14 @@ export const refresh = async (fastify: FastifyInstance) => {
         //   domain: app.config.DOMAIN,
         // path: "/",
         //   secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
+        httpOnly: true
         //   sameSite: true, // alternative CSRF protection,
       });
       reply.setCookie("accessToken", access_token, {
         // domain: app.config.DOMAIN,
         // path: "/",
         // secure: request.protocol === "https", // send cookie over HTTPS only
-        httpOnly: true,
+        httpOnly: true
         // sameSite: true, // alternative CSRF protection,
       });
       return reply.sendSuccess("Token refreshed successfully");

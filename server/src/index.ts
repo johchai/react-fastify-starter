@@ -3,14 +3,13 @@ import Fastify from "fastify";
 import fCookie from "@fastify/cookie";
 import fEnv from "@fastify/env";
 
+import { envSchema } from "@server/lib";
 import {
   authPlugin,
   databasePlugin,
   jwtPlugin,
-  replyPlugin,
+  replyPlugin
 } from "@server/plugins";
-
-import { envSchema } from "@server/lib";
 import routes from "@server/routes";
 
 const app = Fastify({ logger: false });
@@ -21,7 +20,7 @@ const server = async () => {
     await app.register(fEnv, {
       confKey: "config",
       schema: envSchema,
-      dotenv: true,
+      dotenv: true
     });
 
     // Register reply and request decorators for JWT

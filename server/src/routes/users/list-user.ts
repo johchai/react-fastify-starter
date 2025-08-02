@@ -1,10 +1,11 @@
-import { Static, Type } from "@sinclair/typebox";
 import { FastifyInstance } from "fastify";
+
+import { Static, Type } from "@sinclair/typebox";
 
 export const ListUserSchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
-  email: Type.String({ format: "email" }),
+  email: Type.String({ format: "email" })
 });
 
 export const listUser = async (fastify: FastifyInstance) => {
