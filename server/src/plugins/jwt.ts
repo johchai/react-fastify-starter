@@ -3,18 +3,18 @@ import fp from "fastify-plugin";
 
 import fastifyJWT, { FastifyJwtNamespace } from "@fastify/jwt";
 
+import { AccessTokenPayload } from "@server/types";
+
 declare module "fastify" {
   interface FastifyInstance
     extends FastifyJwtNamespace<{ namespace: "auth" }> {}
   interface FastifyRequest {
-    // Custom namespace
-    authJwtVerify: FastifyRequest["jwtVerify"];
-    authJwtDecode: FastifyRequest["jwtDecode"];
+    authJwtVerify: () => Promise<AccessTokenPayload>;
+    authJwtDecode: () => Promise<AccessTokenPayload>;
   }
-
   interface FastifyReply {
-    // Custon namespace
     authJwtSign: FastifyReply["jwtSign"];
+    authJwtDecode: () => Promise<AccessTokenPayload>;
   }
 }
 
@@ -22,13 +22,10 @@ declare module "fastify" {
   interface FastifyInstance
     extends FastifyJwtNamespace<{ namespace: "refresh" }> {}
   interface FastifyRequest {
-    // Custom namespace
     refreshJwtVerify: FastifyRequest["jwtVerify"];
     refreshJwtDecode: FastifyRequest["jwtDecode"];
   }
-
   interface FastifyReply {
-    // Custon namespace
     refreshJwtSign: FastifyReply["jwtSign"];
   }
 }
@@ -45,7 +42,8 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
     },
     namespace: "auth",
     jwtVerify: "authJwtVerify",
-    jwtSign: "authJwtSign"
+    jwtSign: "authJwtSign",
+    jwtDecode: "authJwtDecode"
   });
 
   server.register(fastifyJWT, {
@@ -59,6 +57,7 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
     },
     namespace: "refresh",
     jwtVerify: "refreshJwtVerify",
-    jwtSign: "refreshJwtSign"
+    jwtSign: "refreshJwtSign",
+    jwtDecode: "refreshJwtDecode"
   });
 });

@@ -28,14 +28,25 @@ export const createPost = async (fastify: FastifyInstance) => {
       >;
 
       try {
-        // Simulate post creation logic (e.g., saving to a database)
-        const postId = Math.floor(Math.random() * 1000); // Mock post ID
+        const decodedAccessToken = await request.authJwtDecode();
+
+        if (!decodedAccessToken) {
+          return reply.sendError("Unauthorized access", 401);
+        }
+
+        const result = await fastify.db.run(
+          "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)",
+          [decodedAccessToken.id, title, content]
+        );
+
+        if (result.changes === 0) {
+          return reply.sendError("Failed to create post", 400);
+        }
+
         return reply.sendSuccess("Post created successfully", {
-          post: {
-            id: postId,
-            title,
-            content
-          }
+          id: result.lastID,
+          title,
+          content
         });
       } catch (err) {
         return reply.sendError(

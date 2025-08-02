@@ -14,6 +14,14 @@ export interface JWTPayload {
   [key: string]: string | number | boolean | object;
 }
 
+export interface AccessTokenPayload {
+  id: number;
+  email: string;
+  name: string;
+  iat: number;
+  exp: number;
+}
+
 export interface SuccessResponse<T = any> {
   status: "success";
   message: string;

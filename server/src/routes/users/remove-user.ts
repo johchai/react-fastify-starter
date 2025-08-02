@@ -35,16 +35,16 @@ export const removeUser = async (fastify: FastifyInstance) => {
         }
 
         // Fetch the updated user
-        const user = (await fastify.db.get(
+        const updatedUser = (await fastify.db.get(
           "SELECT id, name, email, deleted_at FROM users WHERE id = ?",
           [id]
         )) as Static<typeof User>;
 
         return reply.sendSuccess("User removed successfully", {
           user: {
-            id: user.id,
-            name: user.name,
-            email: user.email
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email
           }
         });
       } catch (err) {
