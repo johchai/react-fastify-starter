@@ -9,10 +9,18 @@ export const ListUserSchema = Type.Object({
 });
 
 export const listUser = async (fastify: FastifyInstance) => {
-  fastify.get("/", async (request, reply) => {
-    const users = (await fastify.db.all(
-      "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
-    )) as Static<typeof ListUserSchema>[];
-    reply.send(users);
-  });
+  fastify.get(
+    "/",
+    {
+      schema: {
+        tags: ["Users"]
+      }
+    },
+    async (request, reply) => {
+      const users = (await fastify.db.all(
+        "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
+      )) as Static<typeof ListUserSchema>[];
+      reply.send(users);
+    }
+  );
 };

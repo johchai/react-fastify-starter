@@ -16,7 +16,8 @@ export const createPost = async (fastify: FastifyInstance) => {
     "/",
     {
       schema: {
-        body: CreatePostSchema
+        body: CreatePostSchema,
+        tags: ["Posts"]
       }
     },
     async (request, reply) => {

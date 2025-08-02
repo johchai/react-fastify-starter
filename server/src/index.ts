@@ -8,7 +8,8 @@ import {
   authPlugin,
   databasePlugin,
   jwtPlugin,
-  replyPlugin
+  replyPlugin,
+  swaggerPlugin
 } from "@server/plugins";
 import { routes } from "@server/routes";
 
@@ -24,6 +25,7 @@ const server = async () => {
     });
 
     // register plugins and middleware
+    await app.register(swaggerPlugin);
     await app.register(replyPlugin);
     await app.register(fCookie);
     await app.register(jwtPlugin);

@@ -13,6 +13,8 @@
     "@fastify/cookie": "^11.0.2",
     "@fastify/env": "^5.0.2",
     "@fastify/jwt": "^9.1.0",
+    "@fastify/swagger": "^9.5.1",
+    "@fastify/swagger-ui": "^5.2.3",
     "@fastify/type-provider-typebox": "^5.2.0",
     "@sinclair/typebox": "^0.34.38",
     "bcrypt": "^6.0.0",
@@ -22,8 +24,8 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@tsconfig/node14": "^14.1.4",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@tsconfig/node14": "^14.1.4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
     "json-schema-to-ts": "^3.1.1",

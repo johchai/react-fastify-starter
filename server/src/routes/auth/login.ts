@@ -8,12 +8,29 @@ const LoginSchema = Type.Object({
   password: Type.String({ minLength: 6 })
 });
 
+const Event = Type.Object({
+  status: Type.String(),
+  message: Type.String(),
+  data: Type.Object({
+    user: Type.Object({
+      id: Type.Number(),
+      name: Type.String(),
+      email: Type.String({ format: "email" })
+    })
+  }),
+  timestamp: Type.String({ format: "date-time" })
+});
+
 export const login = async (fastify: FastifyInstance) => {
   fastify.post(
     "/login",
     {
       schema: {
-        body: LoginSchema
+        tags: ["Auth"],
+        body: LoginSchema,
+        response: {
+          200: Event
+        }
       }
     },
     async (request, reply) => {

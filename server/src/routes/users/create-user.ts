@@ -14,7 +14,8 @@ export const createUser = async (fastify: FastifyInstance) => {
     "/",
     {
       schema: {
-        body: CreateUserSchema
+        body: CreateUserSchema,
+        tags: ["Users"]
       }
     },
     async (request, reply) => {
