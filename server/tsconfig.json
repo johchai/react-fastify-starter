@@ -5,7 +5,11 @@
     "outDir": "./dist",
     "module": "nodenext",
     "moduleResolution": "NodeNext",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@server/*": ["src/*"]
+    }
   },
   "include": ["src"]
 }

@@ -11,12 +11,12 @@ import fEnv from "@fastify/env";
 import { envSchema } from "./lib/env";
 import jwtPlugin from "./plugins/jwt";
 import replyPlugin from "./plugins/reply";
-import authPlugin from "./plugins/auth";
+import { authPlugin } from "@server/plugins";
 import postRoutes from "./routes/posts";
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: false });
 
-const start = async () => {
+const server = async () => {
   try {
     // Register environment variables plugin
     await app.register(fEnv, {
@@ -52,6 +52,4 @@ const start = async () => {
   }
 };
 
-start();
-
-export default app;
+server();
