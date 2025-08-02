@@ -1,4 +1,4 @@
-import { FromSchema, type JSONSchema } from "json-schema-to-ts";
+import { type JSONSchema } from "json-schema-to-ts";
 
 export const envSchema = {
   type: "object",
@@ -9,5 +9,3 @@ export const envSchema = {
     PORT: { type: "string" },
   },
 } as const satisfies JSONSchema;
-
-export type EnvSchema = FromSchema<typeof envSchema>;

@@ -1,5 +1,4 @@
 import { FastifyInstance } from "fastify";
-import { Type } from "@sinclair/typebox";
 
 export const refresh = async (fastify: FastifyInstance) => {
   fastify.post("/refresh", async (request, reply) => {

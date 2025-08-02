@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-export default async function removeUser(fastify: FastifyInstance) {
+export const removeUser = async (fastify: FastifyInstance) => {
   fastify.patch("/:id/delete", async (request, reply) => {
     const { id } = request.params as { id: string };
 
@@ -22,4 +22,4 @@ export default async function removeUser(fastify: FastifyInstance) {
 
     reply.send({ message: "User removed successfully" });
   });
-}
+};

@@ -6,7 +6,7 @@ const CreatePostSchema = Type.Object({
   content: Type.String({ minLength: 1, maxLength: 500 }),
 });
 
-export default async function createPost(fastify: FastifyInstance) {
+export const createPost = async (fastify: FastifyInstance) => {
   fastify.addHook("preHandler", async (request, reply) => {
     fastify.verifyJWT(request, reply);
   });
@@ -42,4 +42,4 @@ export default async function createPost(fastify: FastifyInstance) {
       }
     }
   );
-}
+};

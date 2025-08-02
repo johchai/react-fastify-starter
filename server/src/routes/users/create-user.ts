@@ -8,7 +8,7 @@ const CreateUserSchema = Type.Object({
   password: Type.String({ minLength: 6 }),
 });
 
-export default async function createUser(fastify: FastifyInstance) {
+export const createUser = async (fastify: FastifyInstance) => {
   fastify.post(
     "/",
     {
@@ -44,4 +44,4 @@ export default async function createUser(fastify: FastifyInstance) {
       reply.code(201).send({ id: result.lastID, name, email });
     }
   );
-}
+};

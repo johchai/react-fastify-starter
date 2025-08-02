@@ -1,7 +1,6 @@
-import { FastifyPluginCallback, FastifyReply } from "fastify";
+import { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 
-// Type definitions for better type safety
 interface SuccessResponse<T = any> {
   status: "success";
   message: string;
@@ -22,7 +21,6 @@ interface ErrorResponse {
   timestamp: string;
 }
 
-// Extend Fastify types
 declare module "fastify" {
   interface FastifyReply {
     sendSuccess: <T = any>(message: string, data?: T) => FastifyReply;
@@ -35,8 +33,7 @@ declare module "fastify" {
   }
 }
 
-const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
-  // Validate status codes helper
+export const replyPlugin: FastifyPluginAsync = fp(async (server) => {
   const validateStatusCode = (code: number, type: "fail" | "error"): void => {
     if (type === "fail" && (code < 400 || code >= 500)) {
       throw new Error(`sendFail expects 4xx status codes, received: ${code}`);
@@ -46,8 +43,7 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
     }
   };
 
-  // Success response decorator
-  fastify.decorateReply("sendSuccess", function <
+  server.decorateReply("sendSuccess", function <
     T = any
   >(this: FastifyReply, message: string, data: T = {} as T): FastifyReply {
     const response: SuccessResponse<T> = {
@@ -60,8 +56,7 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
     return this.code(200).send(response);
   });
 
-  // Fail response decorator (client errors 4xx)
-  fastify.decorateReply(
+  server.decorateReply(
     "sendFail",
     function (
       this: FastifyReply,
@@ -72,8 +67,7 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
       try {
         validateStatusCode(code, "fail");
       } catch (error) {
-        // Log the error but don't throw - fallback to 400
-        fastify.log.warn(error);
+        server.log.warn(error);
         code = 400;
       }
 
@@ -88,8 +82,7 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
     }
   );
 
-  // Error response decorator (server errors 5xx)
-  fastify.decorateReply(
+  server.decorateReply(
     "sendError",
     function (
       this: FastifyReply,
@@ -99,8 +92,7 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
       try {
         validateStatusCode(code, "error");
       } catch (error) {
-        // Log the error but don't throw - fallback to 500
-        fastify.log.warn(error);
+        server.log.warn(error);
         code = 500;
       }
 
@@ -113,10 +105,4 @@ const replyPlugin: FastifyPluginCallback = (fastify, options, done) => {
       return this.code(code).send(response);
     }
   );
-
-  done();
-};
-
-export default fp(replyPlugin, {
-  name: "reply-plugin",
 });

@@ -5,7 +5,6 @@ import fastifyJWT, { FastifyJwtNamespace } from "@fastify/jwt";
 declare module "fastify" {
   interface FastifyInstance
     extends FastifyJwtNamespace<{ namespace: "auth" }> {}
-
   interface FastifyRequest {
     // Custom namespace
     authJwtVerify: FastifyRequest["jwtVerify"];
@@ -21,7 +20,6 @@ declare module "fastify" {
 declare module "fastify" {
   interface FastifyInstance
     extends FastifyJwtNamespace<{ namespace: "refresh" }> {}
-
   interface FastifyRequest {
     // Custom namespace
     refreshJwtVerify: FastifyRequest["jwtVerify"];
@@ -34,7 +32,7 @@ declare module "fastify" {
   }
 }
 
-const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
+export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.ACCESS_TOKEN_SECRET,
     sign: {
@@ -52,7 +50,7 @@ const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.REFRESH_TOKEN_SECRET,
     sign: {
-      expiresIn: "7d",
+      expiresIn: "7d", // Longer-lived refresh tokens
     },
     cookie: {
       cookieName: "refreshToken",
@@ -63,5 +61,3 @@ const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
     jwtSign: "refreshJwtSign",
   });
 });
-
-export default jwtPlugin;

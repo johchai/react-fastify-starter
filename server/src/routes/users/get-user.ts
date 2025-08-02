@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-export default async function getUser(fastify: FastifyInstance) {
+export const getUser = async (fastify: FastifyInstance) => {
   fastify.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
 
@@ -23,4 +23,4 @@ export default async function getUser(fastify: FastifyInstance) {
 
     reply.send(user);
   });
-}
+};

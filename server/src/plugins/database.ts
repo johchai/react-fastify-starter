@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
@@ -9,7 +9,7 @@ declare module "fastify" {
   }
 }
 
-export default fp(async function (fastify: FastifyInstance) {
+export const databasePlugin: FastifyPluginAsync = fp(async (server) => {
   const db = await open({
     filename: "./db/app.db",
     driver: sqlite3.Database,
@@ -27,5 +27,5 @@ export default fp(async function (fastify: FastifyInstance) {
     );
   `);
 
-  fastify.decorate("db", db);
+  server.decorate("db", db);
 });

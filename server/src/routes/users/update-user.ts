@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-export default async function updateUser(fastify: FastifyInstance) {
+export const updateUser = (fastify: FastifyInstance) => {
   fastify.patch("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const { name, email } = request.body as {
@@ -46,4 +46,4 @@ export default async function updateUser(fastify: FastifyInstance) {
       },
     });
   });
-}
+};

@@ -12,7 +12,6 @@ export const authPlugin: FastifyPluginAsync = fp(async (server) => {
     try {
       await request.authJwtVerify();
     } catch (err) {
-      //   server.log.error(err);
       reply.sendFail(401, "Unauthorized: Invalid or expired token");
     }
   });

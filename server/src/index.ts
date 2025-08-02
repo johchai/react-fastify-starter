@@ -1,18 +1,17 @@
 import Fastify from "fastify";
 
-import userRoutes from "./routes/users";
-import authRoutes from "./routes/auth";
-
-import databasePlugin from "./plugins/database";
-
 import fCookie from "@fastify/cookie";
 import fEnv from "@fastify/env";
 
-import { envSchema } from "./lib/env";
-import jwtPlugin from "./plugins/jwt";
-import replyPlugin from "./plugins/reply";
-import { authPlugin } from "@server/plugins";
-import postRoutes from "./routes/posts";
+import {
+  authPlugin,
+  databasePlugin,
+  jwtPlugin,
+  replyPlugin,
+} from "@server/plugins";
+
+import { envSchema } from "@server/lib";
+import routes from "@server/routes";
 
 const app = Fastify({ logger: false });
 
@@ -39,9 +38,7 @@ const server = async () => {
     await app.register(databasePlugin);
 
     // Register your routes
-    await app.register(authRoutes, { prefix: "/auth" });
-    await app.register(userRoutes, { prefix: "/users" });
-    await app.register(postRoutes, { prefix: "/posts" });
+    app.register(routes, { prefix: "/api" });
 
     // Start server
     await app.listen({ port: Number(app.config.PORT) });
