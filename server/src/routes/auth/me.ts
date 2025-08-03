@@ -19,8 +19,14 @@ export const me = async (fastify: FastifyInstance) => {
         tags: ["Auth"],
         response: {
           200: Schema.Response,
-          401: Schema.Fail,
-          500: Schema.Error
+          401: {
+            description: "Unauthorized: Invalid or expired token",
+            ...Schema.Fail
+          },
+          500: {
+            description: "Error: Internal Server Error",
+            ...Schema.Error
+          }
         }
       }
     },
@@ -29,9 +35,9 @@ export const me = async (fastify: FastifyInstance) => {
         const decodedAccessToken = await request.accessJwtDecode();
 
         const user = (await fastify.db.get(
-          "SELECT * FROM users WHERE id = ? AND deleted_at IS NULL",
+          "SELECT id, name, role, email FROM users WHERE id = ?",
           [decodedAccessToken.id]
-        )) as Static<typeof RawUser>;
+        )) as Static<typeof PublicUser>;
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Token authenticated successfully",

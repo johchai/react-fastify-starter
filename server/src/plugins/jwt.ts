@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 
 import fastifyJWT, { FastifyJwtNamespace } from "@fastify/jwt";
 
-import { AccessTokenPayload } from "@server/types";
+import { AccessTokenPayload, RefreshTokenPayload } from "@server/types";
 
 declare module "fastify" {
   interface FastifyInstance
@@ -23,7 +23,7 @@ declare module "fastify" {
     extends FastifyJwtNamespace<{ namespace: "refresh" }> {}
   interface FastifyRequest {
     refreshJwtVerify: FastifyRequest["jwtVerify"];
-    refreshJwtDecode: FastifyRequest["jwtDecode"];
+    refreshJwtDecode: () => Promise<RefreshTokenPayload>;
   }
   interface FastifyReply {
     refreshJwtSign: FastifyReply["jwtSign"];
@@ -50,7 +50,7 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.REFRESH_TOKEN_SECRET,
     sign: {
-      expiresIn: "7d" // Longer-lived refresh tokens
+      expiresIn: "1d" // Longer-lived refresh tokens
     },
     cookie: {
       cookieName: "refreshToken",

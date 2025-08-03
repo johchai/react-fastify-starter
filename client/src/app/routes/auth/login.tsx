@@ -1,5 +1,26 @@
+import { AuthLayout } from "@client/components";
+import { paths } from "@client/config";
+import { LoginForm } from "@client/features";
+
+import { useNavigate, useSearchParams } from "react-router";
+
 const LoginRoute = () => {
-  return <div>LoginRoute</div>;
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+
+  return (
+    <AuthLayout title="Log in to your account">
+      <LoginForm
+        onSuccess={() => {
+          navigate(`${redirectTo ? `${redirectTo}` : paths.root.getHref()}`, {
+            replace: true
+          });
+        }}
+        onFailure={() => {}}
+      />
+    </AuthLayout>
+  );
 };
 
 export default LoginRoute;

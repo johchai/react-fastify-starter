@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import { paths } from "@client/config";
+import { Guard } from "@client/helpers";
 
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
@@ -49,7 +50,11 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       // protected route
       path: "/",
-      element: <AppRoot />,
+      element: (
+        <Guard>
+          <AppRoot />
+        </Guard>
+      ),
       ErrorBoundary: AppRootErrorBoundary,
       children: [
         {

@@ -23,7 +23,7 @@ export const logout = async (fastify: FastifyInstance) => {
       reply.setCookie("accessToken", "", {
         domain: fastify.config.DOMAIN,
         path: "/",
-        // secure: request.protocol === "https", // send cookie over HTTPS only
+        secure: request.protocol === "https",
         httpOnly: true,
         sameSite: true
       });
@@ -31,7 +31,7 @@ export const logout = async (fastify: FastifyInstance) => {
       reply.setCookie("refreshToken", "", {
         domain: fastify.config.DOMAIN,
         path: "/",
-        // secure: request.protocol === "https", // send cookie over HTTPS only
+        secure: request.protocol === "https",
         httpOnly: true,
         sameSite: true
       });

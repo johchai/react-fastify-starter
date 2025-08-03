@@ -45,7 +45,7 @@ export const removeUser = async (fastify: FastifyInstance) => {
 
         // Fetch the updated user
         const updatedUser = (await fastify.db.get(
-          "SELECT id, name, email, deleted_at FROM users WHERE id = ?",
+          "SELECT id, name, role, email FROM users WHERE id = ?",
           [id]
         )) as Static<typeof PublicUser>;
 

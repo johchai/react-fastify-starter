@@ -34,6 +34,12 @@ export interface AccessTokenPayload {
   exp: number;
 }
 
+export interface RefreshTokenPayload {
+  id: number;
+  iat: number;
+  exp: number;
+}
+
 export interface SuccessResponse<T = any> {
   status: "success";
   message: string;

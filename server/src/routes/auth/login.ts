@@ -65,17 +65,19 @@ export const login = async (fastify: FastifyInstance) => {
         reply.setCookie("accessToken", access_token, {
           domain: fastify.config.DOMAIN,
           path: "/",
-          // secure: request.protocol === "https", // send cookie over HTTPS only
+          secure: request.protocol === "https",
           httpOnly: true,
-          sameSite: true
+          sameSite: true,
+          maxAge: 60 * 15 // 15 minutes in seconds
         });
 
         reply.setCookie("refreshToken", refresh_token, {
           domain: fastify.config.DOMAIN,
           path: "/",
-          // secure: request.protocol === "https", // send cookie over HTTPS only
+          secure: request.protocol === "https",
           httpOnly: true,
-          sameSite: true
+          sameSite: true,
+          maxAge: 60 * 60 * 24 // 1 day in seconds
         });
 
         return reply.sendSuccess("Login successful", {
