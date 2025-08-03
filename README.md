@@ -16,11 +16,13 @@ Project uses npm workspaces — run npm install from the root to install all dep
 
 ## 📁 Project Structure
 
+```bash
 ├── client/ # React + Vite frontend
 ├── server/ # Fastify backend
 ├── packages/
 │ └── openapi-types/ # Shared OpenAPI TypeScript types
 └── package.json # Root with npm workspaces
+```
 
 ---
 
