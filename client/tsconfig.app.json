@@ -19,14 +19,9 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    // "erasableSyntaxOnly": true,
+    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-
-    "paths": {
-      "@repo/*": ["./src/*"],
-      "~/*": ["./public/*"]
-    }
+    "noUncheckedSideEffectImports": true
   },
   "include": ["src"]
 }
