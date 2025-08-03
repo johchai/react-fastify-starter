@@ -1,0 +1,13 @@
+{
+  "name": "@internal/openapi-types",
+  "version": "1.0.0",
+  "private": true,
+  "types": "index.d.ts",
+  "description": "Shared OpenAPI types",
+  "keywords": [
+    "openapi",
+    "types"
+  ],
+  "author": "",
+  "license": "ISC"
+}

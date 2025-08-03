@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "NODE_ENV=development tsx watch ./src/index.ts"
+    "dev": "NODE_ENV=development tsx watch ./src/index.ts --clearScreen=true",
+    "generate:types": "npx openapi-typescript http://localhost:4005/docs/json -o ../packages/openapi-types/index.d.ts"
   },
   "keywords": [],
   "author": "",
