@@ -1,8 +1,19 @@
 import { FastifyInstance } from "fastify";
 
-import { PostSchemas } from "@server/schemas";
+import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
+import { Post } from "@server/types";
 
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
+
+const Schema = {
+  Body: Type.Object({
+    title: Type.String({ minLength: 1, maxLength: 240 }),
+    content: Type.String({ minLength: 1, maxLength: 1000 })
+  }),
+  Response: BaseSuccess(Type.Object({ post: Post })),
+  Fail: BaseFail(false),
+  Error: BaseError
+};
 
 export const createPost = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -11,18 +22,16 @@ export const createPost = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
-        body: PostSchemas.Create.Body,
+        body: Schema.Body,
         response: {
-          201: PostSchemas.Create.Response,
-          400: PostSchemas.Create.Fail,
-          500: PostSchemas.Create.Error
+          201: Schema.Response,
+          400: Schema.Fail,
+          500: Schema.Error
         }
       }
     },
     async (request, reply) => {
-      const { title, content } = request.body as Static<
-        typeof PostSchemas.Create.Body
-      >;
+      const { title, content } = request.body as Static<typeof Schema.Body>;
 
       try {
         const decodedAccessToken = await request.authJwtDecode();

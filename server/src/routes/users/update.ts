@@ -1,9 +1,25 @@
 import { FastifyInstance } from "fastify";
 
-import { UserSchemas } from "@server/schemas";
+import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
+import { User } from "@server/types";
 
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
+
+const Schema = {
+  Params: Type.Object({
+    id: Type.Number()
+  }),
+  Body: Type.Intersect([
+    Type.Pick(User, ["name", "email"]),
+    Type.Object({
+      password: Type.String({ minLength: 8 })
+    })
+  ]),
+  Response: BaseSuccess(Type.Object({ user: User })),
+  Fail: BaseFail(false),
+  Error: BaseError
+};
 
 export const updateUser = async (fastify: FastifyInstance) => {
   fastify.patch(
@@ -12,21 +28,19 @@ export const updateUser = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
-        body: UserSchemas.UpdateUser.Body,
-        params: UserSchemas.UpdateUser.Params,
+        body: Schema.Body,
+        params: Schema.Params,
         response: {
-          200: UserSchemas.UpdateUser.Response,
-          404: UserSchemas.UpdateUser.Fail,
-          500: UserSchemas.UpdateUser.Error
+          200: Schema.Response,
+          404: Schema.Fail,
+          500: Schema.Error
         }
       }
     },
     async (request, reply) => {
-      const { id } = request.params as Static<
-        typeof UserSchemas.UpdateUser.Params
-      >;
+      const { id } = request.params as Static<typeof Schema.Params>;
       const { name, email, password } = request.body as Static<
-        typeof UserSchemas.UpdateUser.Body
+        typeof Schema.Body
       >;
 
       try {

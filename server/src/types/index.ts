@@ -1,5 +1,6 @@
 import { envSchema } from "@server/lib";
 
+import { Type } from "@sinclair/typebox";
 import { FromSchema } from "json-schema-to-ts";
 
 declare module "fastify" {
@@ -52,3 +53,33 @@ export interface ErrorResponse {
   message: string;
   timestamp: string;
 }
+
+export const RawUser = Type.Object({
+  id: Type.Number(),
+  name: Type.String(),
+  email: Type.String({ format: "email" }),
+  hashed_password: Type.String(),
+  role: Type.Enum(RoleEnum),
+  created_at: Type.String({ format: "date-time" }),
+  deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
+});
+
+export const PublicUser = Type.Omit(RawUser, [
+  "hashed_password",
+  "created_at",
+  "deleted_at"
+]);
+
+export const Post = Type.Object({
+  id: Type.Number(),
+  title: Type.String(),
+  content: Type.String(),
+  user_id: Type.Number(),
+  created_at: Type.Optional(Type.String({ format: "date-time" }))
+});
+
+export const User = Type.Object({
+  id: Type.Number(),
+  name: Type.String({ minLength: 3 }),
+  email: Type.String({ format: "email" })
+});

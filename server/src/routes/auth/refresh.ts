@@ -1,6 +1,13 @@
 import { FastifyInstance } from "fastify";
 
-import { AuthSchemas } from "@server/schemas";
+import { BaseFail, BaseSuccess } from "@server/lib";
+
+import { Type } from "@sinclair/typebox";
+
+const Schema = {
+  Response: BaseSuccess(Type.Object({})),
+  Fail: BaseFail(false)
+};
 
 export const refresh = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -9,8 +16,8 @@ export const refresh = async (fastify: FastifyInstance) => {
       schema: {
         tags: ["Auth"],
         response: {
-          200: AuthSchemas.Refresh.Response,
-          401: AuthSchemas.Refresh.Fail
+          200: Schema.Response,
+          401: Schema.Fail
         }
       }
     },

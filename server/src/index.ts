@@ -13,7 +13,7 @@ import {
 } from "@server/plugins";
 import { routes } from "@server/routes";
 
-const app = Fastify({ logger: true });
+const app = Fastify({ logger: false });
 
 const server = async () => {
   try {

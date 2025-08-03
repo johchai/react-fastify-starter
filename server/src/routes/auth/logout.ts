@@ -1,6 +1,12 @@
 import { FastifyInstance } from "fastify";
 
-import { AuthSchemas } from "@server/schemas";
+import { BaseSuccess } from "@server/lib";
+
+import { Type } from "@sinclair/typebox";
+
+const Schema = {
+  Response: BaseSuccess(Type.Object({}))
+};
 
 export const logout = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -9,7 +15,7 @@ export const logout = async (fastify: FastifyInstance) => {
       schema: {
         tags: ["Auth"],
         response: {
-          200: AuthSchemas.Logout.Response
+          200: Schema.Response
         }
       }
     },

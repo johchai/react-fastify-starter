@@ -1,9 +1,22 @@
 import { FastifyInstance } from "fastify";
 
-import { AuthSchemas, RawUser } from "@server/schemas";
+import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
+import { PublicUser, RawUser, RoleEnum } from "@server/types";
 
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
+
+const Schema = {
+  Body: Type.Object({
+    name: Type.String({ minLength: 3 }),
+    email: Type.String({ format: "email" }),
+    password: Type.String({ minLength: 8 }),
+    role: Type.Enum(RoleEnum)
+  }),
+  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Fail: BaseFail(false),
+  Error: BaseError
+};
 
 export const register = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -12,17 +25,17 @@ export const register = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Auth"],
-        body: AuthSchemas.Register.Body,
+        body: Schema.Body,
         response: {
-          200: AuthSchemas.Register.Response,
-          401: AuthSchemas.Register.Fail,
-          500: AuthSchemas.Register.Error
+          200: Schema.Response,
+          401: Schema.Fail,
+          500: Schema.Error
         }
       }
     },
     async (request, reply) => {
       const { name, email, password, role } = request.body as Static<
-        typeof AuthSchemas.Register.Body
+        typeof Schema.Body
       >;
 
       try {

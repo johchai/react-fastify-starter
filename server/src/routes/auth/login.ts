@@ -1,9 +1,20 @@
 import { FastifyInstance } from "fastify";
 
-import { AuthSchemas, RawUser } from "@server/schemas";
+import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
+import { PublicUser, RawUser } from "@server/types";
 
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
+
+const Schema = {
+  Body: Type.Object({
+    email: Type.String({ format: "email" }),
+    password: Type.String({ minLength: 6 })
+  }),
+  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Fail: BaseFail(false),
+  Error: BaseError
+};
 
 export const login = async (fastify: FastifyInstance) => {
   fastify.post(
@@ -11,18 +22,16 @@ export const login = async (fastify: FastifyInstance) => {
     {
       schema: {
         tags: ["Auth"],
-        body: AuthSchemas.Login.Body,
+        body: Schema.Body,
         response: {
-          200: AuthSchemas.Login.Response,
-          401: AuthSchemas.Login.Fail,
-          500: AuthSchemas.Login.Error
+          200: Schema.Response,
+          401: Schema.Fail,
+          500: Schema.Error
         }
       }
     },
     async (request, reply) => {
-      const { email, password } = request.body as Static<
-        typeof AuthSchemas.Login.Body
-      >;
+      const { email, password } = request.body as Static<typeof Schema.Body>;
 
       try {
         // Fetch user from the database

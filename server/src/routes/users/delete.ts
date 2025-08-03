@@ -1,8 +1,18 @@
 import { FastifyInstance } from "fastify";
 
-import { User, UserSchemas } from "@server/schemas";
+import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
+import { User } from "@server/types";
 
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
+
+const Schema = {
+  Params: Type.Object({
+    id: Type.Number()
+  }),
+  Response: BaseSuccess(Type.Object({ user: User })),
+  Fail: BaseFail(false),
+  Error: BaseError
+};
 
 export const removeUser = async (fastify: FastifyInstance) => {
   fastify.delete(
@@ -11,18 +21,16 @@ export const removeUser = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
-        params: UserSchemas.RemoveUser.Params,
+        params: Schema.Params,
         response: {
-          200: UserSchemas.RemoveUser.Response,
-          404: UserSchemas.RemoveUser.Fail,
-          500: UserSchemas.RemoveUser.Error
+          200: Schema.Response,
+          404: Schema.Fail,
+          500: Schema.Error
         }
       }
     },
     async (request, reply) => {
-      const { id } = request.params as Static<
-        typeof UserSchemas.RemoveUser.Params
-      >;
+      const { id } = request.params as Static<typeof Schema.Params>;
 
       try {
         const result = await fastify.db.run(
