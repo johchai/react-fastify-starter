@@ -1,6 +1,6 @@
 # Fastify + TypeScript + SQLite + Vite React (WIP)
 
-This is a full-stack monorepo setup using:
+This is a full-stack monorepo CRUD dashboard setup using:
 
 - **Fastify** for the backend (TypeScript)
 - **React + Vite** for the frontend (Cloudflare Workers)
@@ -8,9 +8,32 @@ This is a full-stack monorepo setup using:
 - **SQLite** for the database (TBD or replace if using something else)
 - **npm workspaces** for package management
 
-## 💬 Notes
+---
 
-Project uses npm workspaces — run npm install from the root to install all dependencies
+### 🛠️ Backend — Fastify
+
+- **Authentication**
+  - JWT-based auth
+  - Role-based access control: `"admin"`, `"editor"`, `"viewer"`
+- **API validation**
+  - TypeBox schemas
+  - OpenAPI docs via Swagger
+- **Database**
+  - SQLite (TBD)
+- **API routes**
+  - `POST /api/auth/login` — user login
+  - `POST /api/auth/register` — user registration
+  - `POST /api/auth/refresh` — refresh access token
+  - `POST /api/auth/logout` — logout
+  - `GET/POST/PUT/DELETE /api/users` — user management
+  - `GET/POST/PUT/DELETE /api/posts` — posts CRUD
+
+### 🎨 Frontend — React + Vite (Cloudflare Workers)
+
+- **Routing:** React Router
+- **Data fetching:** React Query
+- **Styling:** Tailwind CSS
+- **Build tool:** Vite
 
 ---
 
@@ -27,6 +50,8 @@ Project uses npm workspaces — run npm install from the root to install all dep
 ---
 
 ## 🧪 Development
+
+- `run npm install` from the root to install all dependencies
 
 ### Start the frontend
 

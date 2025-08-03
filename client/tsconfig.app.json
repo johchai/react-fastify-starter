@@ -19,9 +19,15 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      // "@server/*": ["../server/*"],
+      "@client/*": ["./src/*"],
+      "~/*": ["./public/*"]
+    },
   },
   "include": ["src"]
 }

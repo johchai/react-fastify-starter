@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --border: #e5e5e5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-border: var(--border);
+}
+
+body {
+  font-family: "Inter Variable", sans-serif;
+  background: var(--background);
+}
