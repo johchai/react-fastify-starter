@@ -46,7 +46,7 @@ export const login = async (fastify: FastifyInstance) => {
         }
 
         // sign JWT token - access
-        const access_token = await reply.authJwtSign({
+        const access_token = await reply.accessJwtSign({
           id: user.id,
           email: user.email,
           name: user.name,

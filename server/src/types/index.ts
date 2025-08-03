@@ -77,9 +77,3 @@ export const Post = Type.Object({
   user_id: Type.Number(),
   created_at: Type.Optional(Type.String({ format: "date-time" }))
 });
-
-export const User = Type.Object({
-  id: Type.Number(),
-  name: Type.String({ minLength: 3 }),
-  email: Type.String({ format: "email" })
-});

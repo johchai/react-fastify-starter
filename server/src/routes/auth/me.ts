@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser } from "@server/types";
+import { PublicUser, RawUser } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -11,9 +11,9 @@ const Schema = {
   Error: BaseError
 };
 
-export const refresh = async (fastify: FastifyInstance) => {
-  fastify.post(
-    "/refresh",
+export const me = async (fastify: FastifyInstance) => {
+  fastify.get(
+    "/me",
     {
       schema: {
         tags: ["Auth"],
@@ -26,36 +26,15 @@ export const refresh = async (fastify: FastifyInstance) => {
     },
     async (request, reply) => {
       try {
-        await request.refreshJwtVerify();
         const decodedAccessToken = await request.accessJwtDecode();
 
-        // Fetch user from the database
         const user = (await fastify.db.get(
           "SELECT * FROM users WHERE id = ? AND deleted_at IS NULL",
           [decodedAccessToken.id]
-        )) as Static<typeof PublicUser>;
-
-        const accessToken = await reply.accessJwtSign({});
-        const refreshToken = await reply.refreshJwtSign({});
-
-        // Set cookies for access and refresh tokens
-        reply.setCookie("accessToken", accessToken, {
-          domain: fastify.config.DOMAIN,
-          path: "/",
-          // secure: request.protocol === "https", // send cookie over HTTPS only
-          httpOnly: true,
-          sameSite: true
-        });
-        reply.setCookie("refreshToken", refreshToken, {
-          domain: fastify.config.DOMAIN,
-          path: "/",
-          //   secure: request.protocol === "https", // send cookie over HTTPS only
-          httpOnly: true,
-          sameSite: true
-        });
+        )) as Static<typeof RawUser>;
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
-          "Token refreshed successfully",
+          "Token authenticated successfully",
           {
             user: {
               id: user.id,

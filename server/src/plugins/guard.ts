@@ -20,7 +20,7 @@ export const guardPlugin: FastifyPluginAsync = fp(async (fastify) => {
   // auth middleware to verify JWT
   fastify.decorate("verifyJWT", async (request, reply) => {
     try {
-      await request.authJwtVerify();
+      await request.accessJwtVerify();
     } catch (err) {
       reply.sendFail(401, "Unauthorized: Invalid or expired token");
     }
@@ -29,7 +29,7 @@ export const guardPlugin: FastifyPluginAsync = fp(async (fastify) => {
   // role-based access control middleware
   fastify.decorate("requireRole", (roles: Role[]) => {
     return async function (request: FastifyRequest, reply: FastifyReply) {
-      const decoded = await request.authJwtDecode();
+      const decoded = await request.accessJwtDecode();
 
       const userRole = decoded?.role;
       if (!userRole || !roles.includes(userRole)) {

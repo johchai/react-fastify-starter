@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { User } from "@server/types";
+import { PublicUser } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -9,7 +9,7 @@ const Schema = {
   Params: Type.Object({
     id: Type.Number()
   }),
-  Response: BaseSuccess(Type.Object({ user: User })),
+  Response: BaseSuccess(Type.Object({ user: PublicUser })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -47,15 +47,19 @@ export const removeUser = async (fastify: FastifyInstance) => {
         const updatedUser = (await fastify.db.get(
           "SELECT id, name, email, deleted_at FROM users WHERE id = ?",
           [id]
-        )) as Static<typeof User>;
+        )) as Static<typeof PublicUser>;
 
-        return reply.sendSuccess("User removed successfully", {
-          user: {
-            id: updatedUser.id,
-            name: updatedUser.name,
-            email: updatedUser.email
+        return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
+          "User removed successfully",
+          {
+            user: {
+              id: updatedUser.id,
+              name: updatedUser.name,
+              email: updatedUser.email,
+              role: updatedUser.role
+            }
           }
-        });
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to remove user. Please try again later.",

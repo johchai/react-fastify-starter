@@ -54,15 +54,18 @@ export const updatePost = async (fastify: FastifyInstance) => {
           [id]
         )) as Static<typeof Post>;
 
-        return reply.sendSuccess("Post updated successfully", {
-          post: {
-            id: updatedPost.id,
-            title: updatedPost.title,
-            content: updatedPost.content,
-            user_id: updatedPost.user_id,
-            created_at: updatedPost.created_at || new Date().toISOString()
+        return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
+          "Post updated successfully",
+          {
+            post: {
+              id: updatedPost.id,
+              title: updatedPost.title,
+              content: updatedPost.content,
+              user_id: updatedPost.user_id,
+              created_at: updatedPost.created_at
+            }
           }
-        });
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to update post. Please try again later.",

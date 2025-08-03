@@ -49,15 +49,18 @@ export const removePost = async (fastify: FastifyInstance) => {
           [id]
         )) as Static<typeof Post>;
 
-        return reply.sendSuccess("Post removed successfully", {
-          post: {
-            id: updatedPost.id,
-            title: updatedPost.title,
-            content: updatedPost.content,
-            user_id: updatedPost.user_id,
-            created_at: updatedPost.created_at || new Date().toISOString()
+        return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
+          "Post removed successfully",
+          {
+            post: {
+              id: updatedPost.id,
+              title: updatedPost.title,
+              content: updatedPost.content,
+              user_id: updatedPost.user_id,
+              created_at: updatedPost.created_at
+            }
           }
-        });
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to remove post. Please try again later.",

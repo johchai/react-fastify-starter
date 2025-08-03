@@ -24,6 +24,7 @@ This is a full-stack monorepo CRUD dashboard setup using:
   - `POST /api/auth/login` — user login
   - `POST /api/auth/register` — user registration
   - `POST /api/auth/refresh` — refresh access token
+  - `GET /api/auth/me` — get current user info
   - `POST /api/auth/logout` — logout
   - `GET/POST/PUT/DELETE /api/users` — user management
   - `GET/POST/PUT/DELETE /api/posts` — posts CRUD

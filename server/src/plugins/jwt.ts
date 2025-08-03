@@ -7,14 +7,14 @@ import { AccessTokenPayload } from "@server/types";
 
 declare module "fastify" {
   interface FastifyInstance
-    extends FastifyJwtNamespace<{ namespace: "auth" }> {}
+    extends FastifyJwtNamespace<{ namespace: "access" }> {}
   interface FastifyRequest {
-    authJwtVerify: () => Promise<AccessTokenPayload>;
-    authJwtDecode: () => Promise<AccessTokenPayload>;
+    accessJwtVerify: () => Promise<AccessTokenPayload>;
+    accessJwtDecode: () => Promise<AccessTokenPayload>;
   }
   interface FastifyReply {
-    authJwtSign: FastifyReply["jwtSign"];
-    authJwtDecode: () => Promise<AccessTokenPayload>;
+    accessJwtSign: FastifyReply["jwtSign"];
+    accessJwtDecode: () => Promise<AccessTokenPayload>;
   }
 }
 
@@ -41,10 +41,10 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
       cookieName: "accessToken",
       signed: false
     },
-    namespace: "auth",
-    jwtVerify: "authJwtVerify",
-    jwtSign: "authJwtSign",
-    jwtDecode: "authJwtDecode"
+    namespace: "access",
+    jwtVerify: "accessJwtVerify",
+    jwtSign: "accessJwtSign",
+    jwtDecode: "accessJwtDecode"
   });
 
   server.register(fastifyJWT, {

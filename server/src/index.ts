@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 
 import fCookie from "@fastify/cookie";
+import fCors from "@fastify/cors";
 import fEnv from "@fastify/env";
 
 import { envSchema } from "@server/lib";
@@ -23,6 +24,14 @@ const server = async () => {
       schema: envSchema,
       dotenv: true
     });
+
+    // enable CORS only for development
+    if (app.config.NODE_ENV === "development") {
+      await app.register(fCors, {
+        origin: "http://localhost:5173",
+        credentials: true
+      });
+    }
 
     // register plugins and middleware
     await app.register(swaggerPlugin);

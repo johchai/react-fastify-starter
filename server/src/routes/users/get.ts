@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { User } from "@server/types";
+import { PublicUser } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -10,14 +10,14 @@ const Schema = {
     Params: Type.Object({
       id: Type.Number()
     }),
-    Response: BaseSuccess(Type.Object({ user: User })),
+    Response: BaseSuccess(Type.Object({ user: PublicUser })),
     Fail: BaseFail(false),
     Error: BaseError
   },
   GetAll: {
     Response: BaseSuccess(
       Type.Object({
-        users: Type.Array(User)
+        users: Type.Array(PublicUser)
       })
     ),
     Fail: BaseFail(false),
@@ -36,7 +36,8 @@ export const getUser = async (fastify: FastifyInstance) => {
         response: {
           201: Schema.GetByID.Response,
           400: Schema.GetByID.Fail,
-          404: Schema.GetByID.Error
+          404: Schema.GetByID.Fail,
+          500: Schema.GetByID.Error
         }
       }
     },
@@ -51,13 +52,17 @@ export const getUser = async (fastify: FastifyInstance) => {
 
         if (!user) return reply.sendFail(404, "User not found");
 
-        reply.sendSuccess("User retrieved successfully", {
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email
+        reply.sendSuccess<Static<typeof Schema.GetByID.Response>["data"]>(
+          "User retrieved successfully",
+          {
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role
+            }
           }
-        });
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to retrieve user. Please try again later.",
@@ -83,15 +88,19 @@ export const getUser = async (fastify: FastifyInstance) => {
       try {
         const users = (await fastify.db.all(
           "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
-        )) as Static<typeof User>[];
+        )) as Static<typeof PublicUser>[];
 
-        return reply.sendSuccess("Users retrieved successfully", {
-          users: users.map((user) => ({
-            id: user.id,
-            name: user.name,
-            email: user.email
-          }))
-        });
+        return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
+          "Users retrieved successfully",
+          {
+            users: users.map((user) => ({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role
+            }))
+          }
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to retrieve users. Please try again later.",

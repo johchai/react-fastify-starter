@@ -1,4 +1,3 @@
-// server/src/routes/posts/get.ts
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
@@ -33,7 +32,8 @@ export const getPost = async (fastify: FastifyInstance) => {
         response: {
           201: Schema.GetByID.Response,
           400: Schema.GetByID.Fail,
-          404: Schema.GetByID.Error
+          404: Schema.GetByID.Error,
+          500: Schema.GetByID.Error
         }
       }
     },
@@ -48,15 +48,18 @@ export const getPost = async (fastify: FastifyInstance) => {
 
         if (!post) return reply.sendFail(404, "Post not found");
 
-        reply.sendSuccess("Post retrieved successfully", {
-          post: {
-            id: post.id,
-            title: post.title,
-            content: post.content,
-            user_id: post.user_id,
-            created_at: post.created_at || new Date().toISOString()
+        reply.sendSuccess<Static<typeof Schema.GetByID.Response>["data"]>(
+          "Post retrieved successfully",
+          {
+            post: {
+              id: post.id,
+              title: post.title,
+              content: post.content,
+              user_id: post.user_id,
+              created_at: post.created_at
+            }
           }
-        });
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to retrieve post. Please try again later.",
@@ -84,15 +87,18 @@ export const getPost = async (fastify: FastifyInstance) => {
           "SELECT id, title, content, user_id, created_at FROM posts WHERE deleted_at IS NULL"
         )) as Static<typeof Post>[];
 
-        return reply.sendSuccess("Posts retrieved successfully", {
-          posts: posts.map((post) => ({
-            id: post.id,
-            title: post.title,
-            content: post.content,
-            user_id: post.user_id,
-            created_at: post.created_at || new Date().toISOString()
-          }))
-        });
+        return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
+          "Posts retrieved successfully",
+          {
+            posts: posts.map((post) => ({
+              id: post.id,
+              title: post.title,
+              content: post.content,
+              user_id: post.user_id,
+              created_at: post.created_at
+            }))
+          }
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to retrieve posts. Please try again later.",

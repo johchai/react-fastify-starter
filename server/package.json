@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "NODE_ENV=development tsx watch ./src/index.ts --clearScreen=true",
-    "generate:types": "npx openapi-typescript http://localhost:4005/docs/json -o ../packages/openapi-types/index.d.ts"
+    "generate:types": "openapi --input http://localhost:4005/docs/json --output ../packages/openapi-types/"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.1.0",
     "@fastify/env": "^5.0.2",
     "@fastify/jwt": "^9.1.0",
     "@fastify/swagger": "^9.5.1",
@@ -30,6 +31,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
     "json-schema-to-ts": "^3.1.1",
+    "openapi-typescript-codegen": "^0.29.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }

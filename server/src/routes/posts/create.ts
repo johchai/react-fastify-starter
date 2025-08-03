@@ -34,7 +34,7 @@ export const createPost = async (fastify: FastifyInstance) => {
       const { title, content } = request.body as Static<typeof Schema.Body>;
 
       try {
-        const decodedAccessToken = await request.authJwtDecode();
+        const decodedAccessToken = await request.accessJwtDecode();
 
         if (!decodedAccessToken) {
           return reply.sendError("Unauthorized access", 401);
@@ -49,11 +49,23 @@ export const createPost = async (fastify: FastifyInstance) => {
           return reply.sendError("Failed to create post", 400);
         }
 
-        return reply.sendSuccess("Post created successfully", {
-          id: result.lastID,
-          title,
-          content
-        });
+        const post = await fastify.db.get(
+          "SELECT id, user_id, title, content, created_at, updated_at FROM posts WHERE id = ?",
+          [result.lastID]
+        );
+
+        return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
+          "Post created successfully",
+          {
+            post: {
+              id: post.id,
+              user_id: decodedAccessToken.id,
+              title: post.title,
+              content: post.content,
+              created_at: post.created_at
+            }
+          }
+        );
       } catch (err) {
         return reply.sendError(
           "Failed to create post. Please try again later.",
