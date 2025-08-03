@@ -1,12 +1,12 @@
-# Fastify + TypeScript + SQLite + Vite React
+# Fastify + TypeScript + SQLite + Vite React (WIP)
 
 This is a full-stack monorepo setup using:
 
 - **Fastify** for the backend (TypeScript)
 - **React + Vite** for the frontend (Cloudflare Workers)
+- **Swagger** for API documentation and type generation
 - **SQLite** for the database (TBD or replace if using something else)
 - **npm workspaces** for package management
-- Shared types via `@internal/openapi-types`
 
 ## 💬 Notes
 
@@ -45,7 +45,9 @@ cd server
 npm install
 npm run dev
 
-Starts Fastify server (usually at http://localhost:4005)
+- Fastify server at http://localhost:4005
+- Swagger UI at http://localhost:4005/documentation
+
 ```
 
 ---
