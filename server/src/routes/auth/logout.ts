@@ -21,19 +21,19 @@ export const logout = async (fastify: FastifyInstance) => {
     },
     async (request, reply) => {
       reply.setCookie("accessToken", "", {
-        domain: fastify.config.DOMAIN,
+        //domain: fastify.config.DOMAIN,
         path: "/",
-        secure: request.protocol === "https",
-        httpOnly: true,
-        sameSite: true
+        sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
+        secure: fastify.config.NODE_ENV === "production",
+        httpOnly: true
       });
 
       reply.setCookie("refreshToken", "", {
-        domain: fastify.config.DOMAIN,
+        //domain: fastify.config.DOMAIN,
         path: "/",
-        secure: request.protocol === "https",
-        httpOnly: true,
-        sameSite: true
+        sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
+        secure: fastify.config.NODE_ENV === "production",
+        httpOnly: true
       });
 
       return reply.sendSuccess("Log out successful");

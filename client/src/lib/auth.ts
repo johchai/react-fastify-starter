@@ -1,48 +1,64 @@
 import type { LoginParams, RegisterParams } from "@client/types";
 
-import { ApiError, AuthService } from "@internal/openapi-types";
+import { client } from "@internal/openapi-types/client";
+import {
+  getApiAuthMe,
+  postApiAuthLogin,
+  postApiAuthLogout,
+  postApiAuthRefresh,
+  postApiAuthRegister
+} from "@internal/openapi-types/sdk";
 import { configureAuth } from "react-query-auth";
+
+// configure client's axios instance to include credentials
+client.setConfig({
+  withCredentials: true
+});
 
 const authConfig = {
   userFn: async () => {
     try {
-      const res = await AuthService.getApiAuthMe();
-      return res.data.user;
-    } catch (err) {
-      if (err instanceof ApiError) {
-        if (err.status === 401) {
-          try {
-            const refreshRes = await AuthService.postApiAuthRefresh();
-            if (refreshRes.data.user) {
-              return refreshRes.data.user;
-            }
-          } catch (refreshErr) {
-            console.error("Refresh failed", refreshErr);
+      // call /me, if failed, then try /refresh.
+      const res = await getApiAuthMe();
+      if (res.error && res.error.status === "fail") {
+        try {
+          const refreshRes = await postApiAuthRefresh();
+          if (refreshRes.data?.data.user) {
+            return refreshRes.data.data.user;
           }
+        } catch (refreshErr) {
+          console.error("Refresh failed", refreshErr);
         }
+        throw new Error("User not authenticated");
       }
-
+      return res.data?.data.user;
+    } catch (err) {
+      console.error("Unexpected error during auth check:", err);
       throw new Error("User not authenticated");
     }
   },
   loginFn: async (data: LoginParams) => {
-    const res = await AuthService.postApiAuthLogin({
-      email: data.email,
-      password: data.password
+    const res = await postApiAuthLogin({
+      body: {
+        email: data.email,
+        password: data.password
+      }
     });
-    return res.data.user;
+    return res.data?.data.user;
   },
   registerFn: async (data: RegisterParams) => {
-    const res = await AuthService.postApiAuthRegister({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      role: data.role
+    const res = await postApiAuthRegister({
+      body: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        role: data.role
+      }
     });
-    return res.data.user;
+    return res.data?.data.user;
   },
   logoutFn: async () => {
-    await AuthService.postApiAuthLogout();
+    await postApiAuthLogout();
   }
 };
 

@@ -49,7 +49,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       // protected route
-      path: "/",
+      // path: "/",
       element: (
         <Guard>
           <AppRoot />

@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "NODE_ENV=development tsx watch ./src/index.ts --clearScreen=true",
-    "generate:types": "openapi --input http://localhost:4005/docs/json --output ../packages/openapi-types/"
+    "generate:types": "openapi-ts"
   },
   "keywords": [],
   "author": "",
@@ -26,12 +26,12 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.80.2",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@tsconfig/node14": "^14.1.4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",
     "json-schema-to-ts": "^3.1.1",
-    "openapi-typescript-codegen": "^0.29.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }

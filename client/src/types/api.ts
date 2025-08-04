@@ -1,8 +1,10 @@
-import type { ApiError, AuthService } from "@internal/openapi-types";
+import type {
+  postApiAuthLogin,
+  postApiAuthRegister
+} from "@internal/openapi-types/sdk";
+import { zPostApiAuthLoginData } from "@internal/openapi-types/zod";
+import type z from "zod";
 
-export type LoginParams = Parameters<typeof AuthService.postApiAuthLogin>[0];
-export type RegisterParams = Parameters<
-  typeof AuthService.postApiAuthRegister
->[0];
-
-export type AuthApiError = InstanceType<typeof ApiError>;
+export type zLoginFormInput = z.infer<typeof zPostApiAuthLoginData>;
+export type LoginParams = Parameters<typeof postApiAuthLogin>[0]["body"];
+export type RegisterParams = Parameters<typeof postApiAuthRegister>[0]["body"];

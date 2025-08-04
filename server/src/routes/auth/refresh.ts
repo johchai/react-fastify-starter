@@ -55,17 +55,17 @@ export const refresh = async (fastify: FastifyInstance) => {
         reply.setCookie("accessToken", accessToken, {
           domain: fastify.config.DOMAIN,
           path: "/",
-          secure: request.protocol === "https",
+          secure: fastify.config.NODE_ENV === "production",
           httpOnly: true,
-          sameSite: true,
+          sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
           maxAge: 15 * 60 // 15 minutes
         });
         reply.setCookie("refreshToken", refreshToken, {
           domain: fastify.config.DOMAIN,
           path: "/",
-          secure: request.protocol === "https",
+          secure: fastify.config.NODE_ENV === "production",
           httpOnly: true,
-          sameSite: true,
+          sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
           maxAge: 24 * 60 * 60 // 1 day
         });
 

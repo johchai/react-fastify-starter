@@ -10,15 +10,16 @@ import {
   Input
 } from "@client/components";
 import { useLogin } from "@client/lib";
-import type { LoginParams } from "@client/types";
+import type { zLoginFormInput } from "@client/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { zPostApiAuthLoginData } from "@internal/openapi-types/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
 
 interface LoginFormProps {
-  onSuccess: () => void; // callback for successful login
-  onFailure: () => void; // optional callback for failed login
+  onSuccess: () => void;
+  onFailure: () => void;
 }
 
 export const LoginForm = (props: LoginFormProps) => {
@@ -37,27 +38,21 @@ export const LoginForm = (props: LoginFormProps) => {
     }
   });
 
-  const onSubmit: SubmitHandler<LoginParams> = (data) => {
+  const onSubmit: SubmitHandler<zLoginFormInput> = (data) => {
     setIsLoading(true);
     loginMutation.mutate({
-      email: data.email,
-      password: data.password
+      email: data.body.email,
+      password: data.body.password
     });
   };
 
-  const formSchema = z.object({
-    email: z
-      .string()
-      .email("Invalid email address")
-      .min(1, "Email is required"),
-    password: z.string().min(8, "Password must be at least 8 characters")
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof zPostApiAuthLoginData>>({
+    resolver: zodResolver(zPostApiAuthLoginData),
     defaultValues: {
-      email: "",
-      password: ""
+      body: {
+        email: "",
+        password: ""
+      }
     }
   });
 
@@ -70,7 +65,7 @@ export const LoginForm = (props: LoginFormProps) => {
         >
           <FormField
             control={form.control}
-            name="email"
+            name="body.email"
             render={({ field }) => (
               <FormItem className="grid gap-3">
                 <FormLabel>Email</FormLabel>
@@ -87,7 +82,7 @@ export const LoginForm = (props: LoginFormProps) => {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="body.password"
             render={({ field }) => (
               <FormItem className="grid gap-3">
                 <FormLabel>Password</FormLabel>

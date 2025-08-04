@@ -2,8 +2,21 @@
   "name": "@internal/openapi-types",
   "version": "1.0.0",
   "private": true,
-  "types": "index.ts",
-  "description": "Shared OpenAPI types",
+  "main": "index.ts",
+  "exports": {
+    "./client": {
+      "import": "./src/client.gen.ts"
+    },
+    "./sdk": {
+      "import": "./src/sdk.gen.ts"
+    },
+    "./types": {
+      "import": "./src/types.gen.ts"
+    },
+    "./zod": {
+      "import": "./src/zod.gen.ts"
+    }
+  },
   "keywords": [
     "openapi",
     "types"
