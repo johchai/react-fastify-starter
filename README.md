@@ -72,8 +72,8 @@ cd server
 npm install
 npm run dev
 
-- Fastify server at http://localhost:4005
-- Swagger UI at http://localhost:4005/documentation
+- Fastify server at http://localhost:4000
+- Swagger UI at http://localhost:4000/documentation
 
 ```
 

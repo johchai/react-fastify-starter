@@ -23,7 +23,7 @@ export default {
     if (url.pathname.startsWith("/api/")) {
       const backendUrl = new URL(request.url);
       backendUrl.hostname = "localhost"; // Change this to your backend domain
-      backendUrl.port = "4005"; // remove port if you're switching to prod domain
+      backendUrl.port = "4000"; // remove port if you're switching to prod domain
       backendUrl.protocol = "http:";
 
       const proxiedRequest = new Request(backendUrl.toString(), request);

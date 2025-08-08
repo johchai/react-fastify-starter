@@ -62,7 +62,8 @@ export const updatePost = async (fastify: FastifyInstance) => {
               title: updatedPost.title,
               content: updatedPost.content,
               user_id: updatedPost.user_id,
-              created_at: updatedPost.created_at
+              created_at: updatedPost.created_at,
+              deleted_at: updatedPost.deleted_at
             }
           }
         );

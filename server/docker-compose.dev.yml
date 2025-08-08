@@ -1,0 +1,61 @@
+services:
+  backend:
+    container_name: react-fastify-starter-backend-dev
+    build:
+      context: ../
+      dockerfile: server/Dockerfile
+    networks:
+      - react-fastify-starter-net
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: react_fastify_starter
+      DATABASE_USERNAME: react_fastify_starter_api
+      DATABASE_PASSWORD: BY9VdfS36XEuwnm4xgJAjt
+    depends_on:
+      - postgres
+    env_file:
+      - path: .env.docker
+
+  postgres:
+    container_name: react-fastify-starter-postgres-dev
+    image: postgres:16
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      - POSTGRES_PASSWORD=BY9VdfS36XEuwnm4xgJAjt
+      - POSTGRES_USER=react_fastify_starter_api
+      - POSTGRES_DB=react_fastify_starter
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - react-fastify-starter-net
+
+  pgadmin:
+    container_name: react-fastify-starter-pgadmin-dev
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=hello@johnnychai.com
+      - PGADMIN_DEFAULT_PASSWORD=BY9VdfS36XEuwnm4xgJAjt
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - react-fastify-starter-net
+
+volumes:
+  db:
+    name: react-fastify-starter-db-dev
+
+networks:
+  react-fastify-starter-net:
+    name: react-fastify-starter-dev-network
+    driver: bridge

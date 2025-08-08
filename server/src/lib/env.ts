@@ -12,6 +12,9 @@ export const envSchema = {
     ACCESS_TOKEN_SECRET: { type: "string" },
     REFRESH_TOKEN_SECRET: { type: "string" },
     PORT: { type: "string" },
-    DOMAIN: { type: "string" }
+    DOMAIN: { type: "string" },
+    DATABASE_URL: {
+      type: "string"
+    }
   }
 } as const satisfies JSONSchema;
