@@ -78,8 +78,9 @@ export const PublicUser = Type.Omit(RawUser, [
 
 export const Post = Type.Object({
   id: Type.Number(),
+  user_id: Type.Number(),
   title: Type.String(),
   content: Type.String(),
-  user_id: Type.Number(),
-  created_at: Type.Optional(Type.String({ format: "date-time" }))
+  created_at: Type.String({ format: "date-time" }),
+  deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
 });

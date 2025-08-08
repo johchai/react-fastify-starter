@@ -69,8 +69,8 @@ export const register = async (fastify: FastifyInstance) => {
 
         // No existing user — insert new
         const result = await fastify.db.run(
-          "INSERT INTO users (name, email, hashed_password, role) VALUES (?, ?, ?, ?)",
-          [name, email, hashedPassword, role]
+          "INSERT INTO users (name, email, hashed_password, role, created_at) VALUES (?, ?, ?, ?, ?)",
+          [name, email, hashedPassword, role, new Date().toISOString()]
         );
 
         return reply.sendSuccess("User created successfully", {

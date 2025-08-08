@@ -45,7 +45,7 @@ export const removePost = async (fastify: FastifyInstance) => {
 
         // Fetch the updated post
         const updatedPost = (await fastify.db.get(
-          "SELECT id, title, content, user_id, deleted_at FROM posts WHERE id = ?",
+          "SELECT * FROM posts WHERE id = ?",
           [id]
         )) as Static<typeof Post>;
 
@@ -57,7 +57,8 @@ export const removePost = async (fastify: FastifyInstance) => {
               title: updatedPost.title,
               content: updatedPost.content,
               user_id: updatedPost.user_id,
-              created_at: updatedPost.created_at
+              created_at: updatedPost.created_at,
+              deleted_at: updatedPost.deleted_at
             }
           }
         );

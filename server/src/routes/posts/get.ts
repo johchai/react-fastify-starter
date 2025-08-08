@@ -56,7 +56,8 @@ export const getPost = async (fastify: FastifyInstance) => {
               title: post.title,
               content: post.content,
               user_id: post.user_id,
-              created_at: post.created_at
+              created_at: post.created_at,
+              deleted_at: post.deleted_at
             }
           }
         );
@@ -84,7 +85,7 @@ export const getPost = async (fastify: FastifyInstance) => {
     async (_request, reply) => {
       try {
         const posts = (await fastify.db.all(
-          "SELECT id, title, content, user_id, created_at FROM posts WHERE deleted_at IS NULL"
+          "SELECT * FROM posts WHERE deleted_at IS NULL"
         )) as Static<typeof Post>[];
 
         return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
@@ -95,7 +96,8 @@ export const getPost = async (fastify: FastifyInstance) => {
               title: post.title,
               content: post.content,
               user_id: post.user_id,
-              created_at: post.created_at
+              created_at: post.created_at,
+              deleted_at: post.deleted_at
             }))
           }
         );

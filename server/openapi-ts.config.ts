@@ -10,8 +10,9 @@ export default defineConfig({
       validator: true
     },
     {
-      name: "@hey-api/client-axios"
+      name: "@tanstack/react-query"
     },
+
     {
       name: "zod",
       requests: true,

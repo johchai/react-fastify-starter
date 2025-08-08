@@ -15,6 +15,9 @@
     },
     "./zod": {
       "import": "./src/zod.gen.ts"
+    },
+    "./@tanstack": {
+      "import": "./src/@tanstack/react-query.gen.ts"
     }
   },
   "keywords": [

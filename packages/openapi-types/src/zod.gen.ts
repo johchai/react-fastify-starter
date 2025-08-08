@@ -346,10 +346,14 @@ export const zGetApiPostsResponse = z.object({
     data: z.object({
         posts: z.array(z.object({
             id: z.number(),
+            user_id: z.number(),
             title: z.string(),
             content: z.string(),
-            user_id: z.number(),
-            created_at: z.string().datetime().optional()
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.unknown()
+            ])
         }))
     }),
     timestamp: z.string().datetime()
@@ -375,10 +379,14 @@ export const zPostApiPostsResponse = z.object({
     data: z.object({
         post: z.object({
             id: z.number(),
+            user_id: z.number(),
             title: z.string(),
             content: z.string(),
-            user_id: z.number(),
-            created_at: z.string().datetime().optional()
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.unknown()
+            ])
         })
     }),
     timestamp: z.string().datetime()
@@ -403,10 +411,14 @@ export const zDeleteApiPostsByIdResponse = z.object({
     data: z.object({
         post: z.object({
             id: z.number(),
+            user_id: z.number(),
             title: z.string(),
             content: z.string(),
-            user_id: z.number(),
-            created_at: z.string().datetime().optional()
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.unknown()
+            ])
         })
     }),
     timestamp: z.string().datetime()
@@ -431,10 +443,14 @@ export const zGetApiPostsByIdResponse = z.object({
     data: z.object({
         post: z.object({
             id: z.number(),
+            user_id: z.number(),
             title: z.string(),
             content: z.string(),
-            user_id: z.number(),
-            created_at: z.string().datetime().optional()
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.unknown()
+            ])
         })
     }),
     timestamp: z.string().datetime()
@@ -462,10 +478,14 @@ export const zPatchApiPostsByIdResponse = z.object({
     data: z.object({
         post: z.object({
             id: z.number(),
+            user_id: z.number(),
             title: z.string(),
             content: z.string(),
-            user_id: z.number(),
-            created_at: z.string().datetime().optional()
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.unknown()
+            ])
         })
     }),
     timestamp: z.string().datetime()

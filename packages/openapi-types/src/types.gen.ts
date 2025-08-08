@@ -480,10 +480,11 @@ export type GetApiPostsResponses = {
         data: {
             posts: Array<{
                 id: number;
+                user_id: number;
                 title: string;
                 content: string;
-                user_id: number;
-                created_at?: string;
+                created_at: string;
+                deleted_at: string | unknown;
             }>;
         };
         timestamp: string;
@@ -533,10 +534,11 @@ export type PostApiPostsResponses = {
         data: {
             post: {
                 id: number;
+                user_id: number;
                 title: string;
                 content: string;
-                user_id: number;
-                created_at?: string;
+                created_at: string;
+                deleted_at: string | unknown;
             };
         };
         timestamp: string;
@@ -585,10 +587,11 @@ export type DeleteApiPostsByIdResponses = {
         data: {
             post: {
                 id: number;
+                user_id: number;
                 title: string;
                 content: string;
-                user_id: number;
-                created_at?: string;
+                created_at: string;
+                deleted_at: string | unknown;
             };
         };
         timestamp: string;
@@ -645,10 +648,11 @@ export type GetApiPostsByIdResponses = {
         data: {
             post: {
                 id: number;
+                user_id: number;
                 title: string;
                 content: string;
-                user_id: number;
-                created_at?: string;
+                created_at: string;
+                deleted_at: string | unknown;
             };
         };
         timestamp: string;
@@ -700,10 +704,11 @@ export type PatchApiPostsByIdResponses = {
         data: {
             post: {
                 id: number;
+                user_id: number;
                 title: string;
                 content: string;
-                user_id: number;
-                created_at?: string;
+                created_at: string;
+                deleted_at: string | unknown;
             };
         };
         timestamp: string;
@@ -713,5 +718,5 @@ export type PatchApiPostsByIdResponses = {
 export type PatchApiPostsByIdResponse = PatchApiPostsByIdResponses[keyof PatchApiPostsByIdResponses];
 
 export type ClientOptions = {
-    baseURL: 'http://localhost:4005' | (string & {});
+    baseUrl: 'http://localhost:4005' | (string & {});
 };

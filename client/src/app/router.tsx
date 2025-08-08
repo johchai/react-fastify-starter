@@ -49,7 +49,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       // protected route
-      // path: "/",
+      path: "/",
       element: (
         <Guard>
           <AppRoot />
@@ -60,6 +60,10 @@ const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.posts.root.paths,
           lazy: () => import("./routes/posts/root").then(convert(queryClient))
+        },
+        {
+          path: paths.posts.post.paths,
+          lazy: () => import("./routes/posts/post").then(convert(queryClient))
         },
         {
           path: paths.users.root.paths,

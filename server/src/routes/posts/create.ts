@@ -41,18 +41,17 @@ export const createPost = async (fastify: FastifyInstance) => {
         }
 
         const result = await fastify.db.run(
-          "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)",
-          [decodedAccessToken.id, title, content]
+          "INSERT INTO posts (user_id, title, content, created_at) VALUES (?, ?, ?, ?)",
+          [decodedAccessToken.id, title, content, new Date().toISOString()]
         );
 
         if (result.changes === 0) {
           return reply.sendError("Failed to create post", 400);
         }
 
-        const post = await fastify.db.get(
-          "SELECT id, user_id, title, content, created_at, updated_at FROM posts WHERE id = ?",
-          [result.lastID]
-        );
+        const post = (await fastify.db.get("SELECT * FROM posts WHERE id = ?", [
+          result.lastID
+        ])) as Static<typeof Post>;
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Post created successfully",
@@ -62,7 +61,8 @@ export const createPost = async (fastify: FastifyInstance) => {
               user_id: decodedAccessToken.id,
               title: post.title,
               content: post.content,
-              created_at: post.created_at
+              created_at: post.created_at,
+              deleted_at: post.deleted_at
             }
           }
         );

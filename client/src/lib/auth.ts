@@ -10,9 +10,9 @@ import {
 } from "@internal/openapi-types/sdk";
 import { configureAuth } from "react-query-auth";
 
-// configure client's axios instance to include credentials
+// configure client's instance to include credentials
 client.setConfig({
-  withCredentials: true
+  credentials: "include"
 });
 
 const authConfig = {

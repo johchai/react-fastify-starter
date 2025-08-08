@@ -1,47 +1,41 @@
-import type { AxiosError, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
-import axios from 'axios';
-
-import type { Client, Config } from './types';
+import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
+  createInterceptors,
+  getParseAs,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
 } from './utils';
 
+type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
+  body?: any;
+  headers: ReturnType<typeof mergeHeaders>;
+};
+
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
-
-  let instance: AxiosInstance;
-
-  if (_config.axios && !('Axios' in _config.axios)) {
-    instance = _config.axios;
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { auth, ...configWithoutAuth } = _config;
-    instance = axios.create(configWithoutAuth);
-  }
 
   const getConfig = (): Config => ({ ..._config });
 
   const setConfig = (config: Config): Config => {
     _config = mergeConfigs(_config, config);
-    instance.defaults = {
-      ...instance.defaults,
-      ..._config,
-      // @ts-expect-error
-      headers: mergeHeaders(instance.defaults.headers, _config.headers),
-    };
     return getConfig();
   };
 
-  // @ts-expect-error
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    RequestOptions
+  >();
+
   const request: Client['request'] = async (options) => {
     const opts = {
       ..._config,
       ...options,
-      axios: options.axios ?? _config.axios ?? instance,
+      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
@@ -60,26 +54,78 @@ export const createClient = (config: Config = {}): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
+    // remove Content-Type header if body is empty to avoid sending invalid requests
+    if (opts.body === undefined || opts.body === '') {
+      opts.headers.delete('Content-Type');
+    }
+
     const url = buildUrl(opts);
+    const requestInit: ReqInit = {
+      redirect: 'follow',
+      ...opts,
+    };
 
-    try {
-      // assign Axios here for consistency with fetch
-      const _axios = opts.axios!;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { auth, ...optsWithoutAuth } = opts;
-      const response = await _axios({
-        ...optsWithoutAuth,
-        baseURL: opts.baseURL as string,
-        data: opts.body,
-        headers: opts.headers as RawAxiosRequestHeaders,
-        // let `paramsSerializer()` handle query params if it exists
-        params: opts.paramsSerializer ? opts.query : undefined,
-        url,
-      });
+    let request = new Request(url, requestInit);
 
-      let { data } = response;
+    for (const fn of interceptors.request._fns) {
+      if (fn) {
+        request = await fn(request, opts);
+      }
+    }
 
-      if (opts.responseType === 'json') {
+    // fetch must be assigned here, otherwise it would throw the error:
+    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
+    const _fetch = opts.fetch!;
+    let response = await _fetch(request);
+
+    for (const fn of interceptors.response._fns) {
+      if (fn) {
+        response = await fn(response, request, opts);
+      }
+    }
+
+    const result = {
+      request,
+      response,
+    };
+
+    if (response.ok) {
+      if (
+        response.status === 204 ||
+        response.headers.get('Content-Length') === '0'
+      ) {
+        return opts.responseStyle === 'data'
+          ? {}
+          : {
+              data: {},
+              ...result,
+            };
+      }
+
+      const parseAs =
+        (opts.parseAs === 'auto'
+          ? getParseAs(response.headers.get('Content-Type'))
+          : opts.parseAs) ?? 'json';
+
+      let data: any;
+      switch (parseAs) {
+        case 'arrayBuffer':
+        case 'blob':
+        case 'formData':
+        case 'json':
+        case 'text':
+          data = await response[parseAs]();
+          break;
+        case 'stream':
+          return opts.responseStyle === 'data'
+            ? response.body
+            : {
+                data: response.body,
+                ...result,
+              };
+      }
+
+      if (parseAs === 'json') {
         if (opts.responseValidator) {
           await opts.responseValidator(data);
         }
@@ -89,33 +135,61 @@ export const createClient = (config: Config = {}): Client => {
         }
       }
 
-      return {
-        ...response,
-        data: data ?? {},
-      };
-    } catch (error) {
-      const e = error as AxiosError;
-      if (opts.throwOnError) {
-        throw e;
-      }
-      // @ts-expect-error
-      e.error = e.response?.data ?? {};
-      return e;
+      return opts.responseStyle === 'data'
+        ? data
+        : {
+            data,
+            ...result,
+          };
     }
+
+    const textError = await response.text();
+    let jsonError: unknown;
+
+    try {
+      jsonError = JSON.parse(textError);
+    } catch {
+      // noop
+    }
+
+    const error = jsonError ?? textError;
+    let finalError = error;
+
+    for (const fn of interceptors.error._fns) {
+      if (fn) {
+        finalError = (await fn(error, response, request, opts)) as string;
+      }
+    }
+
+    finalError = finalError || ({} as string);
+
+    if (opts.throwOnError) {
+      throw finalError;
+    }
+
+    // TODO: we probably want to return error and improve types
+    return opts.responseStyle === 'data'
+      ? undefined
+      : {
+          error: finalError,
+          ...result,
+        };
   };
 
   return {
     buildUrl,
+    connect: (options) => request({ ...options, method: 'CONNECT' }),
     delete: (options) => request({ ...options, method: 'DELETE' }),
     get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
     head: (options) => request({ ...options, method: 'HEAD' }),
-    instance,
+    interceptors,
     options: (options) => request({ ...options, method: 'OPTIONS' }),
     patch: (options) => request({ ...options, method: 'PATCH' }),
     post: (options) => request({ ...options, method: 'POST' }),
     put: (options) => request({ ...options, method: 'PUT' }),
     request,
     setConfig,
-  } as Client;
+    trace: (options) => request({ ...options, method: 'TRACE' }),
+  };
 };

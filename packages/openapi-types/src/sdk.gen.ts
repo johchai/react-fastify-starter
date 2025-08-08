@@ -24,7 +24,6 @@ export const getApiAuthMe = <ThrowOnError extends boolean = false>(options?: Opt
         requestValidator: async (data) => {
             return await zGetApiAuthMeData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zGetApiAuthMeResponse.parseAsync(data);
         },
@@ -38,7 +37,6 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
         requestValidator: async (data) => {
             return await zPostApiAuthLoginData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPostApiAuthLoginResponse.parseAsync(data);
         },
@@ -56,7 +54,6 @@ export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?
         requestValidator: async (data) => {
             return await zPostApiAuthLogoutData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPostApiAuthLogoutResponse.parseAsync(data);
         },
@@ -70,7 +67,6 @@ export const postApiAuthRefresh = <ThrowOnError extends boolean = false>(options
         requestValidator: async (data) => {
             return await zPostApiAuthRefreshData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPostApiAuthRefreshResponse.parseAsync(data);
         },
@@ -84,7 +80,6 @@ export const postApiAuthRegister = <ThrowOnError extends boolean = false>(option
         requestValidator: async (data) => {
             return await zPostApiAuthRegisterData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPostApiAuthRegisterResponse.parseAsync(data);
         },
@@ -102,7 +97,6 @@ export const deleteApiUsersById = <ThrowOnError extends boolean = false>(options
         requestValidator: async (data) => {
             return await zDeleteApiUsersByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zDeleteApiUsersByIdResponse.parseAsync(data);
         },
@@ -116,7 +110,6 @@ export const getApiUsersById = <ThrowOnError extends boolean = false>(options: O
         requestValidator: async (data) => {
             return await zGetApiUsersByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zGetApiUsersByIdResponse.parseAsync(data);
         },
@@ -130,7 +123,6 @@ export const patchApiUsersById = <ThrowOnError extends boolean = false>(options:
         requestValidator: async (data) => {
             return await zPatchApiUsersByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPatchApiUsersByIdResponse.parseAsync(data);
         },
@@ -148,7 +140,6 @@ export const getApiUsers = <ThrowOnError extends boolean = false>(options?: Opti
         requestValidator: async (data) => {
             return await zGetApiUsersData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zGetApiUsersResponse.parseAsync(data);
         },
@@ -162,7 +153,6 @@ export const getApiPosts = <ThrowOnError extends boolean = false>(options?: Opti
         requestValidator: async (data) => {
             return await zGetApiPostsData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zGetApiPostsResponse.parseAsync(data);
         },
@@ -176,7 +166,6 @@ export const postApiPosts = <ThrowOnError extends boolean = false>(options: Opti
         requestValidator: async (data) => {
             return await zPostApiPostsData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPostApiPostsResponse.parseAsync(data);
         },
@@ -194,7 +183,6 @@ export const deleteApiPostsById = <ThrowOnError extends boolean = false>(options
         requestValidator: async (data) => {
             return await zDeleteApiPostsByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zDeleteApiPostsByIdResponse.parseAsync(data);
         },
@@ -208,7 +196,6 @@ export const getApiPostsById = <ThrowOnError extends boolean = false>(options: O
         requestValidator: async (data) => {
             return await zGetApiPostsByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zGetApiPostsByIdResponse.parseAsync(data);
         },
@@ -222,7 +209,6 @@ export const patchApiPostsById = <ThrowOnError extends boolean = false>(options:
         requestValidator: async (data) => {
             return await zPatchApiPostsByIdData.parseAsync(data);
         },
-        responseType: 'json',
         responseValidator: async (data) => {
             return await zPatchApiPostsByIdResponse.parseAsync(data);
         },
