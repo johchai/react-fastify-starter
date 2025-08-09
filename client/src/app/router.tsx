@@ -58,6 +58,10 @@ const createAppRouter = (queryClient: QueryClient) =>
       ErrorBoundary: AppRootErrorBoundary,
       children: [
         {
+          path: paths.root.paths,
+          lazy: () => import("./routes/home/root").then(convert(queryClient))
+        },
+        {
           path: paths.posts.root.paths,
           lazy: () => import("./routes/posts/root").then(convert(queryClient))
         },
@@ -68,6 +72,10 @@ const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.users.root.paths,
           lazy: () => import("./routes/users/root").then(convert(queryClient))
+        },
+        {
+          path: paths.users.user.paths,
+          lazy: () => import("./routes/users/user").then(convert(queryClient))
         }
       ]
     }
