@@ -11,10 +11,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-zinc-800 text-white shadow-xs hover:bg-zinc-800/90",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-zinc-100 focus-visible:ring-destructive/20",
+        destructive: "bg-red-800 text-white shadow-xs hover:bg-red-800/90",
         outline: " bg-background shadow-xs hover:bg-zinc-100",
-        secondary: "bg-secondary text-white shadow-xs hover:bg-secondary/80",
+        secondary:
+          "bg-emerald-800 text-white shadow-xs hover:bg-emerald-800/80",
         ghost: "hover:bg-zinc-100",
         tipTap: " text-zinc-800 hover:bg-zinc-100 ",
         link: "text-white underline-offset-4 hover:underline"

@@ -34,7 +34,7 @@ export const login = async (fastify: FastifyInstance) => {
       const { email, password } = request.body as Static<typeof Schema.Body>;
 
       try {
-        const user = await fastify.prisma.user.findUniqueOrThrow({
+        const user = await fastify.prisma.user.findUnique({
           where: { email: email, deleted_at: null }
         });
 
@@ -87,6 +87,7 @@ export const login = async (fastify: FastifyInstance) => {
           }
         });
       } catch (err) {
+        console.error("Login error:", err);
         return reply.sendError("Failed to login. Please try again later.", 500);
       }
     }

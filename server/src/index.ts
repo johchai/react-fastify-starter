@@ -26,12 +26,11 @@ const server = async () => {
     });
 
     // enable CORS only for development
-    if (app.config.NODE_ENV === "development") {
-      await app.register(fCors, {
-        origin: "http://localhost:5173",
-        credentials: true
-      });
-    }
+    await app.register(fCors, {
+      origin: app.config.NODE_ENV === "development",
+      credentials: true,
+      methods: ["GET", "POST", "PATCH", "DELETE"]
+    });
 
     // register plugins and middleware
     await app.register(fCookie);

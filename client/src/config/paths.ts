@@ -41,6 +41,10 @@ export const paths = {
     post: {
       paths: "/posts/:postID",
       getHref: (postID: string) => `/posts/${postID}`
+    },
+    create: {
+      paths: "/posts/create",
+      getHref: () => "/posts/create"
     }
   }
 };

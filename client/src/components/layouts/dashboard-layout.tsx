@@ -1,3 +1,4 @@
+import { Button } from "@client/components";
 import { paths } from "@client/config";
 import { useLogout } from "@client/lib";
 
@@ -24,12 +25,9 @@ export const DashboardLayout = ({
             <Link to="/users">Users</Link>
           </li>
         </ul>
-        <button
-          className="rounded-full bg-zinc-200 px-4 py-1.5 text-sm"
-          onClick={() => logout.mutate({})}
-        >
+        <Button variant="destructive" onClick={() => logout.mutate({})}>
           Log Out
-        </button>
+        </Button>
       </nav>
       <main className="p-4">{children}</main>
       <footer className="bg-zinc-100 p-4">Footer</footer>

@@ -1,33 +1,19 @@
-import { useGetPosts } from "@client/features";
+import { Button } from "@client/components";
+import { paths } from "@client/config";
+import { ViewPosts } from "@client/features";
 
 import { Link } from "react-router";
 
 const PostsRoute = () => {
-  const postsQuery = useGetPosts();
-
-  if (postsQuery.isLoading || postsQuery.isFetching) {
-    return <div>Loading posts...</div>;
-  }
-
   return (
     <section className="space-y-4">
-      <h1 className="font-medium">Posts</h1>
-      {postsQuery.isError && (
-        <div>Error loading posts: {postsQuery.error.message}</div>
-      )}
-      {postsQuery.data && (
-        <ul className="">
-          {postsQuery.data.data.posts.map((post) => (
-            <li key={post.id} className="mb-2 border hover:bg-zinc-200">
-              <Link to={`/posts/${post.id}`} className="block p-4">
-                <h2>{post.title}</h2>
-                <p>{post.content}</p>
-                <p>{post.created_at}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="flex flex-row place-content-between">
+        <h1 className="text-3xl font-medium">Posts</h1>
+        <Button variant="secondary" asChild>
+          <Link to={paths.posts.create.getHref()}>Create Post</Link>
+        </Button>
+      </div>
+      <ViewPosts />
     </section>
   );
 };

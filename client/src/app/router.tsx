@@ -70,6 +70,10 @@ const createAppRouter = (queryClient: QueryClient) =>
           lazy: () => import("./routes/posts/post").then(convert(queryClient))
         },
         {
+          path: paths.posts.create.paths,
+          lazy: () => import("./routes/posts/create").then(convert(queryClient))
+        },
+        {
           path: paths.users.root.paths,
           lazy: () => import("./routes/users/root").then(convert(queryClient))
         },

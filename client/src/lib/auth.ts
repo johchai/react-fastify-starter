@@ -1,5 +1,3 @@
-import type { LoginParams, RegisterParams } from "@client/types";
-
 import { client } from "@internal/openapi-types/client";
 import {
   getApiAuthMe,
@@ -37,7 +35,7 @@ const authConfig = {
       throw new Error("User not authenticated");
     }
   },
-  loginFn: async (data: LoginParams) => {
+  loginFn: async (data: Parameters<typeof postApiAuthLogin>[0]["body"]) => {
     const res = await postApiAuthLogin({
       body: {
         email: data.email,
@@ -46,7 +44,9 @@ const authConfig = {
     });
     return res.data?.data.user;
   },
-  registerFn: async (data: RegisterParams) => {
+  registerFn: async (
+    data: Parameters<typeof postApiAuthRegister>[0]["body"]
+  ) => {
     const res = await postApiAuthRegister({
       body: {
         name: data.name,

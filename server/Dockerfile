@@ -21,7 +21,6 @@ WORKDIR /app/server
 
 # NEW
 COPY --from=builder /app/server/dist ./dist
-COPY --from=builder /app/server/db ./db
 COPY --from=builder /app/server/prisma ./prisma
 COPY --from=builder /app/server/ecosystem.config.js ./ecosystem.config.js
 COPY --from=builder /app/server/package.json ./package.json

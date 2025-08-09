@@ -10,7 +10,6 @@ import {
   Input
 } from "@client/components";
 import { useLogin } from "@client/lib";
-import type { zLoginFormInput } from "@client/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zPostApiAuthLoginData } from "@internal/openapi-types/zod";
@@ -38,7 +37,9 @@ export const LoginForm = (props: LoginFormProps) => {
     }
   });
 
-  const onSubmit: SubmitHandler<zLoginFormInput> = (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof zPostApiAuthLoginData>> = (
+    data
+  ) => {
     setIsLoading(true);
     loginMutation.mutate({
       email: data.body.email,
