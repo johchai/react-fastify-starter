@@ -7,7 +7,21 @@ import { Static, Type } from "@sinclair/typebox";
 
 const Schema = {
   GetAll: {
-    Response: BaseSuccess(Type.Object({ posts: Type.Array(Post) })),
+    Querystring: Type.Object({
+      page: Type.Optional(Type.Integer({ minimum: 1 })),
+      pageSize: Type.Optional(Type.Integer({ minimum: 1, maximum: 100 }))
+    }),
+    Response: BaseSuccess(
+      Type.Object({
+        posts: Type.Array(Post),
+        meta: Type.Object({
+          page: Type.Integer(),
+          pageSize: Type.Integer(),
+          totalItems: Type.Integer(),
+          totalPages: Type.Integer()
+        })
+      })
+    ),
     Fail: BaseFail(false),
     Error: BaseError
   },
@@ -77,6 +91,7 @@ export const getPost = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin", "editor", "viewer"]),
       schema: {
         tags: ["Posts"],
+        querystring: Schema.GetAll.Querystring,
         response: {
           200: Schema.GetAll.Response,
           400: Schema.GetAll.Fail,
@@ -84,13 +99,26 @@ export const getPost = async (fastify: FastifyInstance) => {
         }
       }
     },
-    async (_request, reply) => {
+    async (request, reply) => {
+      const { page = 1, pageSize = 10 } = request.query as Static<
+        typeof Schema.GetAll.Querystring
+      >;
+
       try {
-        const posts = await fastify.prisma.post.findMany({
-          where: {
-            deleted_at: null
-          }
+        const totalItems = await fastify.prisma.post.count({
+          where: { deleted_at: null }
         });
+
+        const skip = (page - 1) * pageSize;
+
+        const posts = await fastify.prisma.post.findMany({
+          where: { deleted_at: null },
+          skip,
+          take: pageSize,
+          orderBy: { created_at: "desc" }
+        });
+
+        const totalPages = Math.ceil(totalItems / pageSize);
 
         return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
           "Posts retrieved successfully",
@@ -102,7 +130,13 @@ export const getPost = async (fastify: FastifyInstance) => {
               user_id: post.user_id,
               created_at: post.created_at.toISOString(),
               deleted_at: post.deleted_at ? post.deleted_at.toISOString() : null
-            }))
+            })),
+            meta: {
+              page,
+              pageSize,
+              totalItems,
+              totalPages
+            }
           }
         );
       } catch (err) {

@@ -6,20 +6,30 @@ import { PublicUser } from "@server/types";
 import { Static, Type } from "@sinclair/typebox";
 
 const Schema = {
+  GetAll: {
+    Querystring: Type.Object({
+      page: Type.Optional(Type.Integer({ minimum: 1 })),
+      pageSize: Type.Optional(Type.Integer({ minimum: 1, maximum: 100 }))
+    }),
+    Response: BaseSuccess(
+      Type.Object({
+        users: Type.Array(PublicUser),
+        meta: Type.Object({
+          page: Type.Integer(),
+          pageSize: Type.Integer(),
+          totalItems: Type.Integer(),
+          totalPages: Type.Integer()
+        })
+      })
+    ),
+    Fail: BaseFail(false),
+    Error: BaseError
+  },
   GetByID: {
     Params: Type.Object({
       id: Type.String()
     }),
     Response: BaseSuccess(Type.Object({ user: PublicUser })),
-    Fail: BaseFail(false),
-    Error: BaseError
-  },
-  GetAll: {
-    Response: BaseSuccess(
-      Type.Object({
-        users: Type.Array(PublicUser)
-      })
-    ),
     Fail: BaseFail(false),
     Error: BaseError
   }
@@ -79,6 +89,7 @@ export const getUser = async (fastify: FastifyInstance) => {
       preHandler: fastify.requireAuthWithRole(["admin"]),
       schema: {
         tags: ["Users"],
+        querystring: Schema.GetAll.Querystring,
         response: {
           200: Schema.GetAll.Response,
           400: Schema.GetByID.Fail,
@@ -86,19 +97,36 @@ export const getUser = async (fastify: FastifyInstance) => {
         }
       }
     },
-    async (_request, reply) => {
+    async (request, reply) => {
+      const { page = 1, pageSize = 10 } = request.query as Static<
+        typeof Schema.GetAll.Querystring
+      >;
+
       try {
+        const totalItems = await fastify.prisma.user.count({
+          where: { deleted_at: null }
+        });
+
+        const skip = (page - 1) * pageSize;
+
         const users = await fastify.prisma.user.findMany({
           where: {
             deleted_at: null
           },
+          skip,
+          take: pageSize,
           select: {
             id: true,
             name: true,
             email: true,
             role: true
+          },
+          orderBy: {
+            created_at: "desc"
           }
         });
+
+        const totalPages = Math.ceil(totalItems / pageSize);
 
         return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
           "Users retrieved successfully",
@@ -108,7 +136,13 @@ export const getUser = async (fastify: FastifyInstance) => {
               name: user.name,
               email: user.email,
               role: user.role
-            }))
+            })),
+            meta: {
+              page,
+              pageSize,
+              totalItems,
+              totalPages
+            }
           }
         );
       } catch (err) {

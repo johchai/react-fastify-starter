@@ -22,7 +22,6 @@
     "@tanstack/react-query-devtools": "^5.84.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "nuqs": "^2.4.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",

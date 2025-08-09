@@ -396,7 +396,10 @@ export type PatchApiUsersByIdResponse = PatchApiUsersByIdResponses[keyof PatchAp
 export type GetApiUsersData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
     url: '/api/users/';
 };
 
@@ -435,6 +438,12 @@ export type GetApiUsersResponses = {
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
             }>;
+            meta: {
+                page: number;
+                pageSize: number;
+                totalItems: number;
+                totalPages: number;
+            };
         };
         timestamp: string;
     };
@@ -445,7 +454,10 @@ export type GetApiUsersResponse = GetApiUsersResponses[keyof GetApiUsersResponse
 export type GetApiPostsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
     url: '/api/posts/';
 };
 
@@ -486,6 +498,12 @@ export type GetApiPostsResponses = {
                 created_at: string;
                 deleted_at: string | unknown;
             }>;
+            meta: {
+                page: number;
+                pageSize: number;
+                totalItems: number;
+                totalPages: number;
+            };
         };
         timestamp: string;
     };

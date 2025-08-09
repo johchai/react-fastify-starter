@@ -297,7 +297,10 @@ export const zPatchApiUsersByIdResponse = z.object({
 export const zGetApiUsersData = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
-    query: z.never().optional()
+    query: z.object({
+        page: z.number().int().gte(1).optional(),
+        pageSize: z.number().int().gte(1).lte(100).optional()
+    }).optional()
 });
 
 /**
@@ -324,7 +327,13 @@ export const zGetApiUsersResponse = z.object({
                     'viewer'
                 ])
             ])
-        }))
+        })),
+        meta: z.object({
+            page: z.number().int(),
+            pageSize: z.number().int(),
+            totalItems: z.number().int(),
+            totalPages: z.number().int()
+        })
     }),
     timestamp: z.string().datetime()
 }).describe('Default Response');
@@ -332,7 +341,10 @@ export const zGetApiUsersResponse = z.object({
 export const zGetApiPostsData = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
-    query: z.never().optional()
+    query: z.object({
+        page: z.number().int().gte(1).optional(),
+        pageSize: z.number().int().gte(1).lte(100).optional()
+    }).optional()
 });
 
 /**
@@ -354,7 +366,13 @@ export const zGetApiPostsResponse = z.object({
                 z.string().datetime(),
                 z.unknown()
             ])
-        }))
+        })),
+        meta: z.object({
+            page: z.number().int(),
+            pageSize: z.number().int(),
+            totalItems: z.number().int(),
+            totalPages: z.number().int()
+        })
     }),
     timestamp: z.string().datetime()
 }).describe('Default Response');

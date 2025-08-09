@@ -4,7 +4,6 @@ import { paths } from "@client/config";
 import { Guard } from "@client/helpers";
 
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import {
   type ActionFunction,
   type LoaderFunction,
@@ -89,9 +88,5 @@ export const AppRouter = () => {
   const queryClient = useQueryClient();
 
   const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
-  return (
-    <NuqsAdapter>
-      <RouterProvider router={router} />
-    </NuqsAdapter>
-  );
+  return <RouterProvider router={router} />;
 };

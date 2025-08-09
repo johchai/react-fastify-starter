@@ -1,11 +1,10 @@
 import * as React from "react";
 import { useEffect } from "react";
 
-import { Link } from "@client/components";
 import { paths } from "@client/config";
 import { useUser } from "@client/lib";
 
-import { useNavigate, useSearchParams } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
 type LayoutProps = {
   children: React.ReactNode;
