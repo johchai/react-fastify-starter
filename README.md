@@ -1,11 +1,12 @@
-# Fastify + TypeScript + SQLite + Vite React (WIP)
+# Fastify + TypeScript + PostgreSQL + Prisma ORM + Vite React (WIP)
 
 This is a full-stack monorepo CRUD dashboard setup using:
 
 - **Fastify** for the backend (TypeScript)
 - **React + Vite** for the frontend (Cloudflare Workers)
 - **Swagger** for API documentation and OpenAPI codegen
-- **SQLite** for the database (TBD or replace if using something else)
+- **PostgreSQL** for the database (Prisma ORM)
+- **Docker** for server containerization
 - **npm workspaces** for package management
 
 ---
@@ -20,7 +21,7 @@ This is a full-stack monorepo CRUD dashboard setup using:
   - OpenAPI docs via Swagger
   - OpenAPI code generation for TypeScript types
 - **Database**
-  - SQLite (TBD)
+  - PostgreSQL + Prisma ORM
 - **API routes**
   - `POST /api/auth/login` — user login
   - `POST /api/auth/register` — user registration

@@ -57,5 +57,4 @@ volumes:
 
 networks:
   react-fastify-starter-net:
-    name: react-fastify-starter-dev-network
     driver: bridge

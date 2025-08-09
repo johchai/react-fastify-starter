@@ -6,7 +6,9 @@
     "server",
     "packages/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "dev:docker": "docker compose -f server/docker-compose.dev.yml -p react-fastify-starter-dev up -d --build --force-recreate"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/johchai/react-fastify-starter.git"

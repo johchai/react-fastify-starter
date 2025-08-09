@@ -1,10 +1,9 @@
-// TODO: for the upcoming pm2 docker image
+// server/ecosystem.config.js
 
 module.exports = {
   apps: [
     {
       name: "react-fastify-starter",
-      args: "run start",
       script: "./dist/index.js",
       instances: "max",
       exec_mode: "cluster",
