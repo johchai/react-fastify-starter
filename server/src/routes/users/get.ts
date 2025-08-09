@@ -8,7 +8,7 @@ import { Static, Type } from "@sinclair/typebox";
 const Schema = {
   GetByID: {
     Params: Type.Object({
-      id: Type.Number()
+      id: Type.String()
     }),
     Response: BaseSuccess(Type.Object({ user: PublicUser })),
     Fail: BaseFail(false),
@@ -45,10 +45,12 @@ export const getUser = async (fastify: FastifyInstance) => {
       const { id } = request.params as Static<typeof Schema.GetByID.Params>;
 
       try {
-        const user = await fastify.db.get(
-          "SELECT * FROM users WHERE id = ? AND deleted_at IS NULL",
-          [id]
-        );
+        const user = await fastify.prisma.user.findUniqueOrThrow({
+          where: {
+            id,
+            deleted_at: null
+          }
+        });
 
         if (!user) return reply.sendFail(404, "User not found");
 
@@ -86,9 +88,17 @@ export const getUser = async (fastify: FastifyInstance) => {
     },
     async (_request, reply) => {
       try {
-        const users = (await fastify.db.all(
-          "SELECT id, name, email FROM users WHERE deleted_at IS NULL"
-        )) as Static<typeof PublicUser>[];
+        const users = await fastify.prisma.user.findMany({
+          where: {
+            deleted_at: null
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        });
 
         return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
           "Users retrieved successfully",

@@ -11,7 +11,7 @@ const Schema = {
     content: Type.Optional(Type.String({ minLength: 1, maxLength: 1000 }))
   }),
   Params: Type.Object({
-    id: Type.Number()
+    id: Type.String()
   }),
   Response: BaseSuccess(Type.Object({ post: Post })),
   Fail: BaseFail(false),
@@ -39,31 +39,31 @@ export const updatePost = async (fastify: FastifyInstance) => {
       const { title, content } = request.body as Static<typeof Schema.Body>;
 
       try {
-        const result = await fastify.db.run(
-          "UPDATE posts SET title = ?, content = ? WHERE id = ? AND deleted_at IS NULL",
-          [title, content, id]
-        );
+        const result = await fastify.prisma.post.update({
+          where: {
+            id: id,
+            deleted_at: null
+          },
+          data: {
+            title,
+            content
+          }
+        });
 
-        if (result.changes === 0) {
-          return reply.sendFail(404, "Post not found or already deleted");
-        }
-
-        // Fetch the updated post
-        const updatedPost = (await fastify.db.get(
-          "SELECT id, title, content, user_id, deleted_at FROM posts WHERE id = ?",
-          [id]
-        )) as Static<typeof Post>;
+        // TODO: have a more specific error message for not found
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Post updated successfully",
           {
             post: {
-              id: updatedPost.id,
-              title: updatedPost.title,
-              content: updatedPost.content,
-              user_id: updatedPost.user_id,
-              created_at: updatedPost.created_at,
-              deleted_at: updatedPost.deleted_at
+              id: result.id,
+              title: result.title,
+              content: result.content,
+              user_id: result.user_id,
+              created_at: result.created_at.toISOString(),
+              deleted_at: result.deleted_at
+                ? result.deleted_at.toISOString()
+                : null
             }
           }
         );

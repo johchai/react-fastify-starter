@@ -26,7 +26,7 @@ export type Role =
   | (typeof RoleEnum)[keyof typeof RoleEnum];
 
 export interface AccessTokenPayload {
-  id: number;
+  id: string;
   email: string;
   name: string;
   role: Role;
@@ -35,7 +35,7 @@ export interface AccessTokenPayload {
 }
 
 export interface RefreshTokenPayload {
-  id: number;
+  id: string;
   iat: number;
   exp: number;
 }
@@ -61,7 +61,7 @@ export interface ErrorResponse {
 }
 
 export const RawUser = Type.Object({
-  id: Type.Number(),
+  id: Type.String(),
   name: Type.String(),
   email: Type.String({ format: "email" }),
   hashed_password: Type.String(),
@@ -77,8 +77,8 @@ export const PublicUser = Type.Omit(RawUser, [
 ]);
 
 export const Post = Type.Object({
-  id: Type.Number(),
-  user_id: Type.Number(),
+  id: Type.String(),
+  user_id: Type.String(),
   title: Type.String(),
   content: Type.String(),
   created_at: Type.String({ format: "date-time" }),

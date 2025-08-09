@@ -40,29 +40,26 @@ export const createPost = async (fastify: FastifyInstance) => {
           return reply.sendError("Unauthorized access", 401);
         }
 
-        const result = await fastify.db.run(
-          "INSERT INTO posts (user_id, title, content, created_at) VALUES (?, ?, ?, ?)",
-          [decodedAccessToken.id, title, content, new Date().toISOString()]
-        );
+        const result = await fastify.prisma.post.create({
+          data: {
+            user_id: decodedAccessToken.id,
+            title,
+            content
+          }
+        });
 
-        if (result.changes === 0) {
-          return reply.sendError("Failed to create post", 400);
-        }
-
-        const post = (await fastify.db.get("SELECT * FROM posts WHERE id = ?", [
-          result.lastID
-        ])) as Static<typeof Post>;
+        if (!result) return reply.sendError("Failed to create post", 400);
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Post created successfully",
           {
             post: {
-              id: post.id,
+              id: result.id,
               user_id: decodedAccessToken.id,
-              title: post.title,
-              content: post.content,
-              created_at: post.created_at,
-              deleted_at: post.deleted_at
+              title: result.title,
+              content: result.content,
+              created_at: result.created_at.toISOString(),
+              deleted_at: null
             }
           }
         );

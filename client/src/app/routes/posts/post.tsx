@@ -2,7 +2,7 @@ import { useGetPost } from "@client/features";
 
 const PostRoute = () => {
   const postQuery = useGetPost({
-    path: { id: 1 } // Replace with the actual post ID you want to fetch
+    path: { id: "f62fe8b4-636a-44dd-945e-ea527394f10e" } // Replace with the actual post ID you want to fetch
   });
 
   if (postQuery.isLoading || postQuery.isFetching) {

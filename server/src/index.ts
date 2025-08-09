@@ -6,7 +6,6 @@ import fEnv from "@fastify/env";
 
 import { envSchema } from "@server/lib";
 import {
-  databasePlugin,
   guardPlugin,
   jwtPlugin,
   prismaPlugin,
@@ -40,7 +39,6 @@ const server = async () => {
     await app.register(replyPlugin);
     await app.register(jwtPlugin);
     await app.register(guardPlugin);
-    await app.register(databasePlugin);
     await app.register(prismaPlugin);
 
     // routes entry point

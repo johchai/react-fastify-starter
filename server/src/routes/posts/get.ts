@@ -13,7 +13,7 @@ const Schema = {
   },
   GetByID: {
     Params: Type.Object({
-      id: Type.Number()
+      id: Type.String()
     }),
     Response: BaseSuccess(Type.Object({ post: Post })),
     Fail: BaseFail(false),
@@ -41,12 +41,14 @@ export const getPost = async (fastify: FastifyInstance) => {
       const { id } = request.params as Static<typeof Schema.GetByID.Params>;
 
       try {
-        const post = await fastify.db.get(
-          "SELECT * FROM posts WHERE id = ? AND deleted_at IS NULL",
-          [id]
-        );
+        const post = await fastify.prisma.post.findUniqueOrThrow({
+          where: {
+            id: id,
+            deleted_at: null
+          }
+        });
 
-        if (!post) return reply.sendFail(404, "Post not found");
+        if (!post) return reply.sendFail(404, "Error: post not found");
 
         reply.sendSuccess<Static<typeof Schema.GetByID.Response>["data"]>(
           "Post retrieved successfully",
@@ -56,8 +58,8 @@ export const getPost = async (fastify: FastifyInstance) => {
               title: post.title,
               content: post.content,
               user_id: post.user_id,
-              created_at: post.created_at,
-              deleted_at: post.deleted_at
+              created_at: post.created_at.toISOString(),
+              deleted_at: post.deleted_at ? post.deleted_at.toISOString() : null
             }
           }
         );
@@ -84,9 +86,11 @@ export const getPost = async (fastify: FastifyInstance) => {
     },
     async (_request, reply) => {
       try {
-        const posts = (await fastify.db.all(
-          "SELECT * FROM posts WHERE deleted_at IS NULL"
-        )) as Static<typeof Post>[];
+        const posts = await fastify.prisma.post.findMany({
+          where: {
+            deleted_at: null
+          }
+        });
 
         return reply.sendSuccess<Static<typeof Schema.GetAll.Response>["data"]>(
           "Posts retrieved successfully",
@@ -96,8 +100,8 @@ export const getPost = async (fastify: FastifyInstance) => {
               title: post.title,
               content: post.content,
               user_id: post.user_id,
-              created_at: post.created_at,
-              deleted_at: post.deleted_at
+              created_at: post.created_at.toISOString(),
+              deleted_at: post.deleted_at ? post.deleted_at.toISOString() : null
             }))
           }
         );

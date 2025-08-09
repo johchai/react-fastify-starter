@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser, RawUser, RoleEnum } from "@server/types";
+import { PublicUser, RoleEnum } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
@@ -39,10 +39,9 @@ export const register = async (fastify: FastifyInstance) => {
       >;
 
       try {
-        const existingUser = (await fastify.db.get(
-          "SELECT * FROM users WHERE email = ?",
-          [email]
-        )) as Static<typeof RawUser>;
+        const existingUser = await fastify.prisma.user.findUniqueOrThrow({
+          where: { email }
+        });
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -53,32 +52,42 @@ export const register = async (fastify: FastifyInstance) => {
           }
 
           // Soft-deleted user — reactivate instead of inserting
-          await fastify.db.run(
-            "UPDATE users SET name = ?, hashed_password = ?, deleted_at = NULL WHERE id = ?",
-            [name, hashedPassword, existingUser.id]
-          );
+          await fastify.prisma.user.update({
+            where: { id: existingUser.id },
+            data: {
+              name,
+              hashed_password: hashedPassword,
+              deleted_at: null,
+              role: role
+            }
+          });
 
           return reply.sendSuccess("User reactivated successfully", {
             user: {
               id: existingUser.id,
               name,
+              role,
               email
             }
           });
         }
 
         // No existing user — insert new
-        const result = await fastify.db.run(
-          "INSERT INTO users (name, email, hashed_password, role, created_at) VALUES (?, ?, ?, ?, ?)",
-          [name, email, hashedPassword, role, new Date().toISOString()]
-        );
+        const result = await fastify.prisma.user.create({
+          data: {
+            name: name,
+            email: email,
+            hashed_password: hashedPassword,
+            role: role
+          }
+        });
 
         return reply.sendSuccess("User created successfully", {
           user: {
-            id: result.lastID,
-            name,
-            email,
-            role
+            id: result.id,
+            name: result.name,
+            email: result.email,
+            role: result.role
           }
         });
       } catch (err) {

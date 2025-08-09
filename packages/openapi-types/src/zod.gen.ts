@@ -18,7 +18,7 @@ export const zGetApiAuthMeResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -56,7 +56,7 @@ export const zPostApiAuthLoginResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -109,7 +109,7 @@ export const zPostApiAuthRefreshResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -159,7 +159,7 @@ export const zPostApiAuthRegisterResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -181,7 +181,7 @@ export const zPostApiAuthRegisterResponse = z.object({
 export const zDeleteApiUsersByIdData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -196,7 +196,7 @@ export const zDeleteApiUsersByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -218,7 +218,7 @@ export const zDeleteApiUsersByIdResponse = z.object({
 export const zGetApiUsersByIdData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -233,7 +233,7 @@ export const zGetApiUsersByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -260,7 +260,7 @@ export const zPatchApiUsersByIdData = z.object({
         password: z.string().min(8)
     })).optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -275,7 +275,7 @@ export const zPatchApiUsersByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         user: z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -310,7 +310,7 @@ export const zGetApiUsersResponse = z.object({
     message: z.string(),
     data: z.object({
         users: z.array(z.object({
-            id: z.number(),
+            id: z.string(),
             name: z.string(),
             email: z.string().email(),
             role: z.union([
@@ -345,8 +345,8 @@ export const zGetApiPostsResponse = z.object({
     message: z.string(),
     data: z.object({
         posts: z.array(z.object({
-            id: z.number(),
-            user_id: z.number(),
+            id: z.string(),
+            user_id: z.string(),
             title: z.string(),
             content: z.string(),
             created_at: z.string().datetime(),
@@ -378,8 +378,8 @@ export const zPostApiPostsResponse = z.object({
     message: z.string(),
     data: z.object({
         post: z.object({
-            id: z.number(),
-            user_id: z.number(),
+            id: z.string(),
+            user_id: z.string(),
             title: z.string(),
             content: z.string(),
             created_at: z.string().datetime(),
@@ -395,7 +395,7 @@ export const zPostApiPostsResponse = z.object({
 export const zDeleteApiPostsByIdData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -410,8 +410,8 @@ export const zDeleteApiPostsByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         post: z.object({
-            id: z.number(),
-            user_id: z.number(),
+            id: z.string(),
+            user_id: z.string(),
             title: z.string(),
             content: z.string(),
             created_at: z.string().datetime(),
@@ -427,7 +427,7 @@ export const zDeleteApiPostsByIdResponse = z.object({
 export const zGetApiPostsByIdData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -442,8 +442,8 @@ export const zGetApiPostsByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         post: z.object({
-            id: z.number(),
-            user_id: z.number(),
+            id: z.string(),
+            user_id: z.string(),
             title: z.string(),
             content: z.string(),
             created_at: z.string().datetime(),
@@ -462,7 +462,7 @@ export const zPatchApiPostsByIdData = z.object({
         content: z.string().min(1).max(1000).optional()
     }).optional(),
     path: z.object({
-        id: z.number()
+        id: z.string()
     }),
     query: z.never().optional()
 });
@@ -477,8 +477,8 @@ export const zPatchApiPostsByIdResponse = z.object({
     message: z.string(),
     data: z.object({
         post: z.object({
-            id: z.number(),
-            user_id: z.number(),
+            id: z.string(),
+            user_id: z.string(),
             title: z.string(),
             content: z.string(),
             created_at: z.string().datetime(),

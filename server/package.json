@@ -4,6 +4,7 @@
   "scripts": {
     "build": "tsx build.ts",
     "dev": "NODE_ENV=development tsx watch ./src/index.ts",
+    "dev:studio": "npx prisma studio",
     "start": "node dist/index.js",
     "generate:types": "openapi-ts"
   },

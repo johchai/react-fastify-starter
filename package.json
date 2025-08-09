@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:docker": "docker compose -f server/docker-compose.dev.yml -p react-fastify-starter-dev up -d --build --force-recreate"
+    "build:server-docker": "docker compose -f server/docker-compose.dev.yml -p react-fastify-starter-dev up -d --build --force-recreate"
   },
   "repository": {
     "type": "git",

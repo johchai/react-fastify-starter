@@ -34,15 +34,13 @@ export const login = async (fastify: FastifyInstance) => {
       const { email, password } = request.body as Static<typeof Schema.Body>;
 
       try {
-        // Fetch user from the database
-        const user = (await fastify.db.get(
-          "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL",
-          [email]
-        )) as Static<typeof RawUser>;
+        const user = await fastify.prisma.user.findUniqueOrThrow({
+          where: { email: email, deleted_at: null }
+        });
 
         // Check if user exists and password matches
         if (!user || !(await bcrypt.compare(password, user.hashed_password))) {
-          reply.sendFail(401, "User not found or invalid credentials");
+          return reply.sendFail(401, "User not found or invalid credentials");
         }
 
         // sign JWT token - access

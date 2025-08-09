@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser, RawUser } from "@server/types";
+import { PublicUser } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -34,10 +34,15 @@ export const me = async (fastify: FastifyInstance) => {
       try {
         const decodedAccessToken = await request.accessJwtDecode();
 
-        const user = (await fastify.db.get(
-          "SELECT id, name, role, email FROM users WHERE id = ?",
-          [decodedAccessToken.id]
-        )) as Static<typeof PublicUser>;
+        const user = await fastify.prisma.user.findUniqueOrThrow({
+          where: { id: decodedAccessToken.id, deleted_at: null },
+          select: {
+            id: true,
+            name: true,
+            role: true,
+            email: true
+          }
+        });
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Token authenticated successfully",

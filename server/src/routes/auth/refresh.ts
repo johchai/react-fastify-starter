@@ -35,11 +35,15 @@ export const refresh = async (fastify: FastifyInstance) => {
         await request.refreshJwtVerify();
         const decodedAccessToken = await request.refreshJwtDecode();
 
-        // Fetch user from the database
-        const user = (await fastify.db.get(
-          "SELECT id, name, role, email FROM users WHERE id = ?",
-          [decodedAccessToken.id]
-        )) as Static<typeof PublicUser>;
+        const user = await fastify.prisma.user.findUniqueOrThrow({
+          where: { id: decodedAccessToken.id },
+          select: {
+            id: true,
+            name: true,
+            role: true,
+            email: true
+          }
+        });
 
         const accessToken = await reply.accessJwtSign({
           id: user.id,
@@ -47,6 +51,7 @@ export const refresh = async (fastify: FastifyInstance) => {
           name: user.name,
           role: user.role
         });
+
         const refreshToken = await reply.refreshJwtSign({
           id: user.id
         });

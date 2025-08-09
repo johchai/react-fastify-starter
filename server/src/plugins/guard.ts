@@ -21,6 +21,13 @@ export const guardPlugin: FastifyPluginAsync = fp(async (fastify) => {
   fastify.decorate("verifyJWT", async (request, reply) => {
     try {
       await request.accessJwtVerify();
+      const decoded = await request.accessJwtDecode();
+      await fastify.prisma.user.findUniqueOrThrow({
+        where: { id: decoded.id, deleted_at: null },
+        select: {
+          id: true
+        }
+      });
     } catch (err) {
       reply.sendFail(401, "Unauthorized: Invalid or expired token");
     }

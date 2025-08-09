@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 
 const Schema = {
   Params: Type.Object({
-    id: Type.Number()
+    id: Type.String()
   }),
   Body: Type.Intersect([
     Type.Pick(PublicUser, ["name", "email"]),
@@ -46,28 +46,26 @@ export const updateUser = async (fastify: FastifyInstance) => {
       try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const result = await fastify.db.run(
-          "UPDATE users SET name = ?, email = ?, hashed_password = ? WHERE id = ? AND deleted_at IS NULL",
-          [name, email, hashedPassword, id]
-        );
-
-        if (result.changes === 0) {
-          return reply.sendFail(404, "User not found or already deleted");
-        }
-
-        const updatedUser = (await fastify.db.get(
-          "SELECT id, name, email, role FROM users WHERE id = ?",
-          [id]
-        )) as Static<typeof PublicUser>;
+        const result = await fastify.prisma.user.update({
+          where: {
+            id: id,
+            deleted_at: null
+          },
+          data: {
+            name: name,
+            email: email,
+            hashed_password: hashedPassword
+          }
+        });
 
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "User updated successfully",
           {
             user: {
-              id: updatedUser.id,
-              name: updatedUser.name,
-              email: updatedUser.email,
-              role: updatedUser.role
+              id: result.id,
+              name: result.name,
+              email: result.email,
+              role: result.role
             }
           }
         );

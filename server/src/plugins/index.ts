@@ -1,4 +1,3 @@
-export { databasePlugin } from "./database";
 export { guardPlugin } from "./guard";
 export { jwtPlugin } from "./jwt";
 export { swaggerPlugin } from "./swagger";
