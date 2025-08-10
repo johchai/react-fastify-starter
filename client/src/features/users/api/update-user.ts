@@ -1,7 +1,10 @@
 import { getUserQueryKey, getUsersQueryKey } from "@client/features";
 
-import { patchApiUsersByIdMutation } from "@internal/openapi-types";
-import type { Options, PatchApiUsersByIdData } from "@internal/openapi-types";
+import {
+  type Options,
+  type PatchApiUsersByIdData,
+  patchApiUsersByIdMutation
+} from "@internal/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateUser = (params?: {

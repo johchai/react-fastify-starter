@@ -1,8 +1,9 @@
 import {
+  type GetApiUsersByIdData,
+  type Options,
   getApiUsersByIdOptions,
   getApiUsersByIdQueryKey
-} from "@internal/openapi-types";
-import type { GetApiUsersByIdData, Options } from "@internal/openapi-types";
+} from "@internal/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetUser = (options: Options<GetApiUsersByIdData>) => {

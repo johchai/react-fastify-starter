@@ -1,8 +1,9 @@
 import {
+  type GetApiPostsByIdData,
+  type Options,
   getApiPostsByIdOptions,
   getApiPostsByIdQueryKey
-} from "@internal/openapi-types";
-import type { GetApiPostsByIdData, Options } from "@internal/openapi-types";
+} from "@internal/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetPost = (options: Options<GetApiPostsByIdData>) => {

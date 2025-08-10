@@ -8,7 +8,7 @@ import { paths } from "@client/config";
 import { useDeletePost, useGetPost, useUpdatePost } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPatchApiPostsByIdData } from "@internal/openapi-types";
+import { zPatchApiPostsByIdData } from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import type z from "zod";

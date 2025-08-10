@@ -8,8 +8,7 @@ import { paths } from "@client/config";
 import { useDeleteUser, useGetUser, useUpdateUser } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPatchApiUsersByIdData } from "@internal/openapi-types";
-import { RoleEnum } from "@internal/openapi-types/shared";
+import { RoleEnum, zPatchApiUsersByIdData } from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import type z from "zod";

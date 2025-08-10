@@ -1,13 +1,12 @@
-import { configureAuth } from "react-query-auth";
-
-import { client } from "../../../packages/openapi-types/generated/client.gen";
 import {
+  client,
   getApiAuthMe,
   postApiAuthLogin,
   postApiAuthLogout,
   postApiAuthRefresh,
   postApiAuthRegister
-} from "../../../packages/openapi-types/generated/sdk.gen";
+} from "@internal/types";
+import { configureAuth } from "react-query-auth";
 
 // configure client's instance to include credentials
 client.setConfig({
@@ -52,8 +51,7 @@ const authConfig = {
       body: {
         name: data.name,
         email: data.email,
-        password: data.password,
-        role: data.role
+        password: data.password
       }
     });
     return res.data?.data.user;

@@ -1,7 +1,10 @@
 import { getPostQueryKey, getPostsQueryKey } from "@client/features";
 
-import { deleteApiPostsByIdMutation } from "@internal/openapi-types";
-import type { DeleteApiPostsByIdData, Options } from "@internal/openapi-types";
+import {
+  type DeleteApiPostsByIdData,
+  type Options,
+  deleteApiPostsByIdMutation
+} from "@internal/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useDeletePost = (params?: {

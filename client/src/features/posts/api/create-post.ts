@@ -4,7 +4,7 @@ import {
   type Options,
   type PostApiPostsData,
   postApiPostsMutation
-} from "@internal/openapi-types";
+} from "@internal/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreatePost = (params?: {

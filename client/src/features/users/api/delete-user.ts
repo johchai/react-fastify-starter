@@ -1,7 +1,10 @@
 import { getUserQueryKey, getUsersQueryKey } from "@client/features";
 
-import { deleteApiUsersByIdMutation } from "@internal/openapi-types";
-import type { DeleteApiUsersByIdData, Options } from "@internal/openapi-types";
+import {
+  type DeleteApiUsersByIdData,
+  type Options,
+  deleteApiUsersByIdMutation
+} from "@internal/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useDeleteUser = (params?: {
