@@ -12,7 +12,7 @@ import {
 import { useLogin } from "@client/lib";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPostApiAuthLoginData } from "@internal/openapi-types/zod";
+import { zPostApiAuthLoginData } from "@internal/openapi-types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
 

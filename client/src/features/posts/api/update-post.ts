@@ -1,8 +1,7 @@
 import { getPostQueryKey, getPostsQueryKey } from "@client/features";
 
-import { patchApiPostsByIdMutation } from "@internal/openapi-types/@tanstack";
-import type { Options } from "@internal/openapi-types/sdk";
-import type { PatchApiPostsByIdData } from "@internal/openapi-types/types";
+import { patchApiPostsByIdMutation } from "@internal/openapi-types";
+import type { Options, PatchApiPostsByIdData } from "@internal/openapi-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdatePost = (params?: {

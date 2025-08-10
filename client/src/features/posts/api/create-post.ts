@@ -1,8 +1,10 @@
 import { getPostsQueryKey } from "@client/features";
 
-import { postApiPostsMutation } from "@internal/openapi-types/@tanstack";
-import type { Options } from "@internal/openapi-types/sdk";
-import type { PostApiPostsData } from "@internal/openapi-types/types";
+import {
+  type Options,
+  type PostApiPostsData,
+  postApiPostsMutation
+} from "@internal/openapi-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreatePost = (params?: {

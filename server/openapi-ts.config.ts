@@ -2,15 +2,22 @@ import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
   input: "http://localhost:4000/docs/json",
-  output: "../packages/openapi-types/src",
+  output: "../packages/openapi-types/generated",
+  parser: {
+    patch: {
+      version: "3.1.1" // TEMP FIX: https://github.com/hey-api/openapi-ts/issues/2169
+    }
+  },
   plugins: [
     {
       name: "@hey-api/sdk",
       auth: true,
-      validator: true
+      validator: true,
+      exportFromIndex: true
     },
     {
-      name: "@tanstack/react-query"
+      name: "@tanstack/react-query",
+      exportFromIndex: true
     },
 
     {
@@ -18,7 +25,8 @@ export default defineConfig({
       requests: true,
       definitions: true,
       compatibilityVersion: 3,
-      metadata: true
+      metadata: true,
+      exportFromIndex: true
     }
   ]
 });

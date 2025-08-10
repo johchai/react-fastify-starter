@@ -1,12 +1,12 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser } from "@server/types";
+import { User } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
 const Schema = {
-  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Response: BaseSuccess(Type.Object({ user: User })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -41,7 +41,9 @@ export const refresh = async (fastify: FastifyInstance) => {
             id: true,
             name: true,
             role: true,
-            email: true
+            email: true,
+            created_at: true,
+            deleted_at: true
           }
         });
 
@@ -81,7 +83,9 @@ export const refresh = async (fastify: FastifyInstance) => {
               id: user.id,
               email: user.email,
               name: user.name,
-              role: user.role
+              role: user.role,
+              created_at: user.created_at.toISOString(),
+              deleted_at: user.deleted_at ? user.deleted_at.toISOString() : null
             }
           }
         );

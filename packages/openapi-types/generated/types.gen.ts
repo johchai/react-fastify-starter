@@ -41,6 +41,8 @@ export type GetApiAuthMeResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -93,6 +95,8 @@ export type PostApiAuthLoginResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -165,6 +169,8 @@ export type PostApiAuthRefreshResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -178,7 +184,6 @@ export type PostApiAuthRegisterData = {
         name: string;
         email: string;
         password: string;
-        role: 'admin' | 'editor' | 'viewer';
     };
     path?: never;
     query?: never;
@@ -219,6 +224,8 @@ export type PostApiAuthRegisterResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -270,6 +277,8 @@ export type DeleteApiUsersByIdResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -329,6 +338,8 @@ export type GetApiUsersByIdResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -338,11 +349,11 @@ export type GetApiUsersByIdResponses = {
 export type GetApiUsersByIdResponse = GetApiUsersByIdResponses[keyof GetApiUsersByIdResponses];
 
 export type PatchApiUsersByIdData = {
-    body?: {
+    body: {
         name: string;
         email: string;
-    } & {
-        password: string;
+        role: 'admin' | 'editor' | 'viewer';
+        deleted_at: string | null;
     };
     path: {
         id: string;
@@ -385,6 +396,8 @@ export type PatchApiUsersByIdResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             };
         };
         timestamp: string;
@@ -437,6 +450,8 @@ export type GetApiUsersResponses = {
                 name: string;
                 email: string;
                 role: 'admin' | 'editor' | 'viewer';
+                created_at: string;
+                deleted_at: string | null;
             }>;
             meta: {
                 page: number;
@@ -495,7 +510,7 @@ export type GetApiPostsResponses = {
                 title: string;
                 content: string;
                 created_at: string;
-                deleted_at: string | unknown;
+                deleted_at: string | null;
                 user: {
                     id: string;
                     name: string;
@@ -558,7 +573,7 @@ export type PostApiPostsResponses = {
                 title: string;
                 content: string;
                 created_at: string;
-                deleted_at: string | unknown;
+                deleted_at: string | null;
                 user: {
                     id: string;
                     name: string;
@@ -614,7 +629,7 @@ export type DeleteApiPostsByIdResponses = {
                 title: string;
                 content: string;
                 created_at: string;
-                deleted_at: string | unknown;
+                deleted_at: string | null;
                 user: {
                     id: string;
                     name: string;
@@ -678,7 +693,7 @@ export type GetApiPostsByIdResponses = {
                 title: string;
                 content: string;
                 created_at: string;
-                deleted_at: string | unknown;
+                deleted_at: string | null;
                 user: {
                     id: string;
                     name: string;
@@ -737,7 +752,7 @@ export type PatchApiPostsByIdResponses = {
                 title: string;
                 content: string;
                 created_at: string;
-                deleted_at: string | unknown;
+                deleted_at: string | null;
                 user: {
                     id: string;
                     name: string;

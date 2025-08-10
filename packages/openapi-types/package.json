@@ -4,20 +4,11 @@
   "private": true,
   "main": "index.ts",
   "exports": {
-    "./client": {
-      "import": "./src/client.gen.ts"
+    "./shared": {
+      "import": "./shared.ts"
     },
-    "./sdk": {
-      "import": "./src/sdk.gen.ts"
-    },
-    "./types": {
-      "import": "./src/types.gen.ts"
-    },
-    "./zod": {
-      "import": "./src/zod.gen.ts"
-    },
-    "./@tanstack": {
-      "import": "./src/@tanstack/react-query.gen.ts"
+    ".": {
+      "import": "./generated/index.ts"
     }
   },
   "keywords": [

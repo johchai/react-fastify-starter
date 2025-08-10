@@ -1,18 +1,14 @@
 import {
   Button,
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  Input,
-  Textarea
+  TextAreaInputField,
+  TextInputField
 } from "@client/components";
 import { paths } from "@client/config";
 import { useCreatePost } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPostApiPostsData } from "@internal/openapi-types/zod";
+import { zPostApiPostsData } from "@internal/openapi-types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import type z from "zod";
@@ -56,29 +52,17 @@ export const CreatePost = () => {
           console.error("Validation errors:", errors);
         })}
       >
-        <FormField
+        <TextInputField
           control={form.control}
           name="body.title"
-          render={({ field }) => (
-            <FormItem className="grid gap-3">
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input type="text" required {...field} />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Title"
+          placeholder="Enter post title here..."
         />
-        <FormField
+        <TextAreaInputField
           control={form.control}
+          label="Content"
           name="body.content"
-          render={({ field }) => (
-            <FormItem className="grid gap-3">
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Textarea required {...field} />
-              </FormControl>
-            </FormItem>
-          )}
+          placeholder="Enter post content here..."
         />
         <div className="flex w-full items-center gap-2">
           <Button type="submit" disabled={createPostMutation.isPending}>

@@ -15,12 +15,14 @@ export interface JWTPayload {
   [key: string]: string | number | boolean | object;
 }
 
+// TODO: move this to @internal/openapi-types
 export const RoleEnum = {
   admin: "admin",
   editor: "editor",
   viewer: "viewer"
 } as const;
 
+// TODO: move this to @internal/openapi-types
 export type Role =
   | keyof typeof RoleEnum
   | (typeof RoleEnum)[keyof typeof RoleEnum];
@@ -60,21 +62,14 @@ export interface ErrorResponse {
   timestamp: string;
 }
 
-export const RawUser = Type.Object({
+export const User = Type.Object({
   id: Type.String(),
   name: Type.String(),
   email: Type.String({ format: "email" }),
-  hashed_password: Type.String(),
   role: Type.Enum(RoleEnum),
   created_at: Type.String({ format: "date-time" }),
   deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
 });
-
-export const PublicUser = Type.Omit(RawUser, [
-  "hashed_password",
-  "created_at",
-  "deleted_at"
-]);
 
 export const Post = Type.Object({
   id: Type.String(),

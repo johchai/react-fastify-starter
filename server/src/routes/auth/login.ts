@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser, RawUser } from "@server/types";
+import { User } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 import bcrypt from "bcrypt";
@@ -11,7 +11,7 @@ const Schema = {
     email: Type.String({ format: "email" }),
     password: Type.String({ minLength: 6 })
   }),
-  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Response: BaseSuccess(Type.Object({ user: User })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -78,14 +78,19 @@ export const login = async (fastify: FastifyInstance) => {
           maxAge: 60 * 60 * 24 // 1 day in seconds
         });
 
-        return reply.sendSuccess("Login successful", {
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role
+        return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
+          "Login successful",
+          {
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              created_at: user.created_at.toISOString(),
+              deleted_at: user.deleted_at ? user.deleted_at.toISOString() : null
+            }
           }
-        });
+        );
       } catch (err) {
         console.error("Login error:", err);
         return reply.sendError("Failed to login. Please try again later.", 500);

@@ -1,12 +1,13 @@
-import { client } from "@internal/openapi-types/client";
+import { configureAuth } from "react-query-auth";
+
+import { client } from "../../../packages/openapi-types/generated/client.gen";
 import {
   getApiAuthMe,
   postApiAuthLogin,
   postApiAuthLogout,
   postApiAuthRefresh,
   postApiAuthRegister
-} from "@internal/openapi-types/sdk";
-import { configureAuth } from "react-query-auth";
+} from "../../../packages/openapi-types/generated/sdk.gen";
 
 // configure client's instance to include credentials
 client.setConfig({

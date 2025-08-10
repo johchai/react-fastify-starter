@@ -1,18 +1,14 @@
 import {
   Button,
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  Input,
-  Textarea
+  TextAreaInputField,
+  TextInputField
 } from "@client/components";
 import { paths } from "@client/config";
 import { useDeletePost, useGetPost, useUpdatePost } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPatchApiPostsByIdData } from "@internal/openapi-types/zod";
+import { zPatchApiPostsByIdData } from "@internal/openapi-types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import type z from "zod";
@@ -77,29 +73,16 @@ export const UpdatePost = ({ postID }: UpdatePostProps) => {
           console.error("Validation errors:", errors);
         })}
       >
-        <FormField
+        <TextInputField
           control={form.control}
           name="body.title"
-          render={({ field }) => (
-            <FormItem className="grid gap-3">
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input type="text" required {...field} />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Title"
         />
-        <FormField
+        <TextAreaInputField
           control={form.control}
+          label="Content"
           name="body.content"
-          render={({ field }) => (
-            <FormItem className="grid gap-3">
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Textarea required {...field} />
-              </FormControl>
-            </FormItem>
-          )}
+          placeholder="Enter post content here..."
         />
         <div className="flex w-full items-center gap-2">
           <Button type="submit" disabled={updatePostMutation.isPending}>

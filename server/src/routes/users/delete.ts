@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser } from "@server/types";
+import { User } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -9,7 +9,7 @@ const Schema = {
   Params: Type.Object({
     id: Type.String()
   }),
-  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Response: BaseSuccess(Type.Object({ user: User })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -50,7 +50,11 @@ export const removeUser = async (fastify: FastifyInstance) => {
               id: result.id,
               name: result.name,
               email: result.email,
-              role: result.role
+              role: result.role,
+              created_at: result.created_at.toISOString(),
+              deleted_at: result.deleted_at
+                ? result.deleted_at.toISOString()
+                : null
             }
           }
         );

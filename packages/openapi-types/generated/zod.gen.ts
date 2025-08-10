@@ -31,6 +31,11 @@ export const zGetApiAuthMeResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -69,6 +74,11 @@ export const zPostApiAuthLoginResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -122,6 +132,11 @@ export const zPostApiAuthRefreshResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -132,18 +147,7 @@ export const zPostApiAuthRegisterData = z.object({
     body: z.object({
         name: z.string().min(3),
         email: z.string().email(),
-        password: z.string().min(8),
-        role: z.union([
-            z.enum([
-                'admin'
-            ]),
-            z.enum([
-                'editor'
-            ]),
-            z.enum([
-                'viewer'
-            ])
-        ])
+        password: z.string().min(8)
     }),
     path: z.never().optional(),
     query: z.never().optional()
@@ -172,6 +176,11 @@ export const zPostApiAuthRegisterResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -209,6 +218,11 @@ export const zDeleteApiUsersByIdResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -246,6 +260,11 @@ export const zGetApiUsersByIdResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -254,11 +273,24 @@ export const zGetApiUsersByIdResponse = z.object({
 
 export const zPatchApiUsersByIdData = z.object({
     body: z.object({
-        name: z.string(),
-        email: z.string().email()
-    }).and(z.object({
-        password: z.string().min(8)
-    })).optional(),
+        name: z.string().min(1).max(100),
+        email: z.string().email(),
+        role: z.union([
+            z.enum([
+                'admin'
+            ]),
+            z.enum([
+                'editor'
+            ]),
+            z.enum([
+                'viewer'
+            ])
+        ]),
+        deleted_at: z.union([
+            z.string().datetime(),
+            z.null()
+        ])
+    }),
     path: z.object({
         id: z.string()
     }),
@@ -288,6 +320,11 @@ export const zPatchApiUsersByIdResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })
     }),
@@ -326,6 +363,11 @@ export const zGetApiUsersResponse = z.object({
                 z.enum([
                     'viewer'
                 ])
+            ]),
+            created_at: z.string().datetime(),
+            deleted_at: z.union([
+                z.string().datetime(),
+                z.null()
             ])
         })),
         meta: z.object({
@@ -363,7 +405,7 @@ export const zGetApiPostsResponse = z.object({
             created_at: z.string().datetime(),
             deleted_at: z.union([
                 z.string().datetime(),
-                z.unknown()
+                z.null()
             ]),
             user: z.object({
                 id: z.string(),
@@ -405,7 +447,7 @@ export const zPostApiPostsResponse = z.object({
             created_at: z.string().datetime(),
             deleted_at: z.union([
                 z.string().datetime(),
-                z.unknown()
+                z.null()
             ]),
             user: z.object({
                 id: z.string(),
@@ -440,7 +482,7 @@ export const zDeleteApiPostsByIdResponse = z.object({
             created_at: z.string().datetime(),
             deleted_at: z.union([
                 z.string().datetime(),
-                z.unknown()
+                z.null()
             ]),
             user: z.object({
                 id: z.string(),
@@ -475,7 +517,7 @@ export const zGetApiPostsByIdResponse = z.object({
             created_at: z.string().datetime(),
             deleted_at: z.union([
                 z.string().datetime(),
-                z.unknown()
+                z.null()
             ]),
             user: z.object({
                 id: z.string(),
@@ -513,7 +555,7 @@ export const zPatchApiPostsByIdResponse = z.object({
             created_at: z.string().datetime(),
             deleted_at: z.union([
                 z.string().datetime(),
-                z.unknown()
+                z.null()
             ]),
             user: z.object({
                 id: z.string(),

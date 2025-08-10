@@ -1,9 +1,8 @@
 import {
   getApiPostsOptions,
   getApiPostsQueryKey
-} from "@internal/openapi-types/@tanstack";
-import type { Options } from "@internal/openapi-types/sdk";
-import type { GetApiPostsData } from "@internal/openapi-types/types";
+} from "@internal/openapi-types";
+import type { GetApiPostsData, Options } from "@internal/openapi-types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetPosts = (options?: Options<GetApiPostsData>) => {

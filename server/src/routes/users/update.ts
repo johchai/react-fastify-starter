@@ -1,22 +1,21 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser } from "@server/types";
+import { RoleEnum, User } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
-import bcrypt from "bcrypt";
 
 const Schema = {
   Params: Type.Object({
     id: Type.String()
   }),
-  Body: Type.Intersect([
-    Type.Pick(PublicUser, ["name", "email"]),
-    Type.Object({
-      password: Type.String({ minLength: 8 })
-    })
-  ]),
-  Response: BaseSuccess(Type.Object({ user: PublicUser })),
+  Body: Type.Object({
+    name: Type.String({ minLength: 1, maxLength: 100 }),
+    email: Type.String({ format: "email" }),
+    role: Type.Enum(RoleEnum),
+    deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
+  }),
+  Response: BaseSuccess(Type.Object({ user: User })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -39,22 +38,20 @@ export const updateUser = async (fastify: FastifyInstance) => {
     },
     async (request, reply) => {
       const { id } = request.params as Static<typeof Schema.Params>;
-      const { name, email, password } = request.body as Static<
+      const { name, email, role, deleted_at } = request.body as Static<
         typeof Schema.Body
       >;
 
       try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const result = await fastify.prisma.user.update({
           where: {
-            id: id,
-            deleted_at: null
+            id: id
           },
           data: {
             name: name,
             email: email,
-            hashed_password: hashedPassword
+            role: role,
+            deleted_at: deleted_at
           }
         });
 
@@ -65,11 +62,16 @@ export const updateUser = async (fastify: FastifyInstance) => {
               id: result.id,
               name: result.name,
               email: result.email,
-              role: result.role
+              role: result.role,
+              created_at: result.created_at.toISOString(),
+              deleted_at: result.deleted_at
+                ? result.deleted_at.toISOString()
+                : null
             }
           }
         );
       } catch (err) {
+        fastify.log.error(err);
         return reply.sendError(
           "Failed to update user. Please try again later.",
           500

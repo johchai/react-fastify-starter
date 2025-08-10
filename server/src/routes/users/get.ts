@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { PublicUser } from "@server/types";
+import { User } from "@server/types";
 
 import { Static, Type } from "@sinclair/typebox";
 
@@ -13,7 +13,7 @@ const Schema = {
     }),
     Response: BaseSuccess(
       Type.Object({
-        users: Type.Array(PublicUser),
+        users: Type.Array(User),
         meta: Type.Object({
           page: Type.Integer(),
           pageSize: Type.Integer(),
@@ -29,7 +29,7 @@ const Schema = {
     Params: Type.Object({
       id: Type.String()
     }),
-    Response: BaseSuccess(Type.Object({ user: PublicUser })),
+    Response: BaseSuccess(Type.Object({ user: User })),
     Fail: BaseFail(false),
     Error: BaseError
   }
@@ -57,8 +57,7 @@ export const getUser = async (fastify: FastifyInstance) => {
       try {
         const user = await fastify.prisma.user.findUniqueOrThrow({
           where: {
-            id,
-            deleted_at: null
+            id
           }
         });
 
@@ -71,7 +70,9 @@ export const getUser = async (fastify: FastifyInstance) => {
               id: user.id,
               name: user.name,
               email: user.email,
-              role: user.role
+              role: user.role,
+              created_at: user.created_at.toISOString(),
+              deleted_at: user.deleted_at ? user.deleted_at.toISOString() : null
             }
           }
         );
@@ -103,23 +104,20 @@ export const getUser = async (fastify: FastifyInstance) => {
       >;
 
       try {
-        const totalItems = await fastify.prisma.user.count({
-          where: { deleted_at: null }
-        });
+        const totalItems = await fastify.prisma.user.count();
 
         const skip = (page - 1) * pageSize;
 
         const users = await fastify.prisma.user.findMany({
-          where: {
-            deleted_at: null
-          },
           skip,
           take: pageSize,
           select: {
             id: true,
             name: true,
             email: true,
-            role: true
+            role: true,
+            created_at: true,
+            deleted_at: true
           },
           orderBy: {
             created_at: "desc"
@@ -135,7 +133,9 @@ export const getUser = async (fastify: FastifyInstance) => {
               id: user.id,
               name: user.name,
               email: user.email,
-              role: user.role
+              role: user.role,
+              created_at: user.created_at.toISOString(),
+              deleted_at: user.deleted_at ? user.deleted_at.toISOString() : null
             })),
             meta: {
               page,
