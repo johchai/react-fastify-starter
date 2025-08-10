@@ -82,5 +82,9 @@ export const Post = Type.Object({
   title: Type.String(),
   content: Type.String(),
   created_at: Type.String({ format: "date-time" }),
-  deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
+  deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
+  user: Type.Object({
+    id: Type.String(),
+    name: Type.String()
+  })
 });

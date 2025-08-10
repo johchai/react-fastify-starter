@@ -13,7 +13,7 @@ const Schema = {
     }),
     Response: BaseSuccess(
       Type.Object({
-        posts: Type.Array(Post),
+        posts: Type.Array(Type.Omit(Post, ["user_id"])),
         meta: Type.Object({
           page: Type.Integer(),
           pageSize: Type.Integer(),
@@ -29,7 +29,7 @@ const Schema = {
     Params: Type.Object({
       id: Type.String()
     }),
-    Response: BaseSuccess(Type.Object({ post: Post })),
+    Response: BaseSuccess(Type.Object({ post: Type.Omit(Post, ["user_id"]) })),
     Fail: BaseFail(false),
     Error: BaseError
   }
@@ -59,6 +59,14 @@ export const getPost = async (fastify: FastifyInstance) => {
           where: {
             id: id,
             deleted_at: null
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
           }
         });
 
@@ -71,7 +79,10 @@ export const getPost = async (fastify: FastifyInstance) => {
               id: post.id,
               title: post.title,
               content: post.content,
-              user_id: post.user_id,
+              user: {
+                id: post.user.id,
+                name: post.user.name
+              },
               created_at: post.created_at.toISOString(),
               deleted_at: post.deleted_at ? post.deleted_at.toISOString() : null
             }
@@ -115,7 +126,15 @@ export const getPost = async (fastify: FastifyInstance) => {
           where: { deleted_at: null },
           skip,
           take: pageSize,
-          orderBy: { created_at: "desc" }
+          orderBy: { created_at: "desc" },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
         });
 
         const totalPages = Math.ceil(totalItems / pageSize);
@@ -128,6 +147,10 @@ export const getPost = async (fastify: FastifyInstance) => {
               title: post.title,
               content: post.content,
               user_id: post.user_id,
+              user: {
+                id: post.user.id,
+                name: post.user.name
+              },
               created_at: post.created_at.toISOString(),
               deleted_at: post.deleted_at ? post.deleted_at.toISOString() : null
             })),

@@ -10,7 +10,7 @@ const Schema = {
     title: Type.String({ minLength: 1, maxLength: 240 }),
     content: Type.String({ minLength: 1, maxLength: 1000 })
   }),
-  Response: BaseSuccess(Type.Object({ post: Post })),
+  Response: BaseSuccess(Type.Object({ post: Type.Omit(Post, ["user_id"]) })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -45,6 +45,14 @@ export const createPost = async (fastify: FastifyInstance) => {
             user_id: decodedAccessToken.id,
             title,
             content
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
           }
         });
 
@@ -55,8 +63,11 @@ export const createPost = async (fastify: FastifyInstance) => {
           {
             post: {
               id: result.id,
-              user_id: decodedAccessToken.id,
               title: result.title,
+              user: {
+                id: result.user.id,
+                name: result.user.name
+              },
               content: result.content,
               created_at: result.created_at.toISOString(),
               deleted_at: null

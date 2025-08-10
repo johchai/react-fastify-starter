@@ -492,11 +492,14 @@ export type GetApiPostsResponses = {
         data: {
             posts: Array<{
                 id: string;
-                user_id: string;
                 title: string;
                 content: string;
                 created_at: string;
                 deleted_at: string | unknown;
+                user: {
+                    id: string;
+                    name: string;
+                };
             }>;
             meta: {
                 page: number;
@@ -552,11 +555,14 @@ export type PostApiPostsResponses = {
         data: {
             post: {
                 id: string;
-                user_id: string;
                 title: string;
                 content: string;
                 created_at: string;
                 deleted_at: string | unknown;
+                user: {
+                    id: string;
+                    name: string;
+                };
             };
         };
         timestamp: string;
@@ -605,11 +611,14 @@ export type DeleteApiPostsByIdResponses = {
         data: {
             post: {
                 id: string;
-                user_id: string;
                 title: string;
                 content: string;
                 created_at: string;
                 deleted_at: string | unknown;
+                user: {
+                    id: string;
+                    name: string;
+                };
             };
         };
         timestamp: string;
@@ -666,11 +675,14 @@ export type GetApiPostsByIdResponses = {
         data: {
             post: {
                 id: string;
-                user_id: string;
                 title: string;
                 content: string;
                 created_at: string;
                 deleted_at: string | unknown;
+                user: {
+                    id: string;
+                    name: string;
+                };
             };
         };
         timestamp: string;
@@ -722,11 +734,14 @@ export type PatchApiPostsByIdResponses = {
         data: {
             post: {
                 id: string;
-                user_id: string;
                 title: string;
                 content: string;
                 created_at: string;
                 deleted_at: string | unknown;
+                user: {
+                    id: string;
+                    name: string;
+                };
             };
         };
         timestamp: string;

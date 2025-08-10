@@ -50,9 +50,10 @@ export const ViewPosts = () => {
                   to={`/posts/${post.id}`}
                   className="size-full p-4 hover:bg-zinc-200"
                 >
-                  <p className="pb-2 text-xs">{post.created_at}</p>
+                  <span className="text-xs">{post.created_at}</span>
                   <h2 className="font-medium">{post.title}</h2>
-                  <p>{post.content}</p>
+                  <h3>{post.content}</h3>
+                  <span className="text-xs">By {post.user.name}</span>
                 </Link>
               </li>
             ))}

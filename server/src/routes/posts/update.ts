@@ -13,7 +13,7 @@ const Schema = {
   Params: Type.Object({
     id: Type.String()
   }),
-  Response: BaseSuccess(Type.Object({ post: Post })),
+  Response: BaseSuccess(Type.Object({ post: Type.Omit(Post, ["user_id"]) })),
   Fail: BaseFail(false),
   Error: BaseError
 };
@@ -47,6 +47,14 @@ export const updatePost = async (fastify: FastifyInstance) => {
           data: {
             title,
             content
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
           }
         });
 
@@ -59,7 +67,10 @@ export const updatePost = async (fastify: FastifyInstance) => {
               id: result.id,
               title: result.title,
               content: result.content,
-              user_id: result.user_id,
+              user: {
+                id: result.user.id,
+                name: result.user.name
+              },
               created_at: result.created_at.toISOString(),
               deleted_at: result.deleted_at
                 ? result.deleted_at.toISOString()

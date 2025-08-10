@@ -5,7 +5,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  Input
+  Input,
+  Textarea
 } from "@client/components";
 import { paths } from "@client/config";
 import { useCreatePost } from "@client/features";
@@ -74,7 +75,7 @@ export const CreatePost = () => {
             <FormItem className="grid gap-3">
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <Input type="text" required {...field} />
+                <Textarea required {...field} />
               </FormControl>
             </FormItem>
           )}
