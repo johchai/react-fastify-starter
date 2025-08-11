@@ -1,15 +1,22 @@
-# React Fastify Starter (WIP)
+# ✨ React Fastify Starter (WIP)
 
-A modern full-stack \ monorepo for CRUD dashboards and web apps, featuring a type-safe dockerized backend (Fastify, TypeScript, PostgreSQL, Prisma), high-performance frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
+A starter full-stack monorepo template for CRUD dashboards and web apps — with a type-safe, dockerized backend (Fastify, TypeScript, PostgreSQL, Prisma), a simple frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
+
+This is just my personal playground for my full-stack projects, nothing serious!
+
+## 🔧 To-Do
+
+- Add production deployment instructions.
+- Add initial seed user and post.
 
 ---
 
-## 1. Project Overview
+## 1. 🌐 Project Overview
 
 **React Fastify Starter** is designed for developers who want a scalable, maintainable full-stack web apps. It features:
 
 - End-to-end type safety
-- JWT authentication with role-based access
+- JWT authentication with role-based access ("admin", "editor", "viewer")
 - Modern React frontend with Vite
 - PostgreSQL database with Prisma ORM
 - Dockerized local development
@@ -17,7 +24,7 @@ A modern full-stack \ monorepo for CRUD dashboards and web apps, featuring a typ
 
 ---
 
-## 2. Tech Stack
+## 2. ⚒️ Tech Stack
 
 **Backend:**
 
@@ -43,7 +50,7 @@ A modern full-stack \ monorepo for CRUD dashboards and web apps, featuring a typ
 
 ---
 
-## 3. Project Structure
+## 3. 📁 Project Structure
 
 ```bash
 ├── client/           # React + Vite frontend
@@ -60,7 +67,7 @@ A modern full-stack \ monorepo for CRUD dashboards and web apps, featuring a typ
 
 ---
 
-## 4. Getting Started
+## 4. ⚡ Getting Started
 
 ### Prerequisites
 
@@ -72,44 +79,28 @@ A modern full-stack \ monorepo for CRUD dashboards and web apps, featuring a typ
 ### Environment Setup
 
 1. **Clone the repo:**
-   ```bash
-   git clone https://github.com/johchai/react-fastify-starter.git
-   cd react-fastify-starter
-   ```
 
-````
+```bash
+git clone https://github.com/johchai/react-fastify-starter.git
+cd react-fastify-starter
+```
+
 2. **Copy and configure environment files:**
-   - `server/.env.example` → `server/.env` (set DB connection, JWT secrets, etc.)
-   - `client/.env.example` → `client/.env` (set API base URL, etc.)
+
+- `server/.env.example` → `server/.env` (set DB connection, JWT secrets, etc.)
+- `client/.env.example` → `client/.env` (set API base URL, etc.)
 
 ### Install Dependencies
+
 From the project root:
+
 ```bash
 npm install
-````
+```
 
 This installs dependencies for all workspaces (client, server, shared types).
 
-### Database Setup
-
-- **With Docker:**
-  ```bash
-  cd server
-  docker compose -f docker-compose.dev.yml up -d
-  # This starts PostgreSQL and the Fastify server
-  ```
-- **Without Docker:**
-  - Install PostgreSQL locally
-  - Create a database and update `DATABASE_URL` in `server/.env`
-  - Run migrations:
-    ```bash
-    cd server
-    npx prisma migrate dev
-    ```
-
----
-
-## 5. Development Workflow
+## 5. ⛳ Development Workflow
 
 ### Start the Frontend
 
@@ -141,7 +132,7 @@ npm run dev
 
 ---
 
-## 6. API Reference
+## 6. 📣 API Reference
 
 ### Auth Endpoints
 
@@ -151,16 +142,14 @@ npm run dev
 - `GET /api/auth/me` — Get current user info
 - `POST /api/auth/logout` — Logout
 
-### User & Post CRUD
+### Users & Posts Endpoints
 
 - `GET/POST/PUT/DELETE /api/users` — User management (admin only)
 - `GET/POST/PUT/DELETE /api/posts` — Posts CRUD
 
-- All endpoints are documented in Swagger UI ([http://localhost:4000/docs](http://localhost:4000/docs)).
-
 ---
 
-## 7. Frontend Features
+## 7. 💬 Frontend Features
 
 - **Routing:** Managed by React Router (`client/src/app/router.tsx`)
 - **Data Fetching:** React Query hooks for API calls
@@ -169,30 +158,32 @@ npm run dev
 
 ---
 
-## 8. Shared Types & OpenAPI
+## 8. ✏️ Shared Types & OpenAPI
 
 - The backend generates an OpenAPI spec using Fastify Swagger.
 - TypeScript types are generated from the OpenAPI spec and placed in `packages/types`.
 - Both client and server import these types for end-to-end type safety.
-- **Regenerate types after API changes:**
-  ```bash
-  npm run build:type
-  # This runs openapi-ts in server/ and updates packages/types
-  ```
+
+**Regenerate types after API changes:**
+
+```bash
+npm run build:type
+# This runs openapi-ts in server/ and updates packages/types
+```
 
 ---
 
-## 9. Production Deployment
+## 9. 📖 Production Deployment
 
 ### Build the Frontend
+
+- Outputs static assets for deployment (e.g., to Cloudflare Workers, Vercel, Netlify)
 
 ```bash
 cd client
 npm run build
-# Or npm run deploy if using Cloudflare Workers
+# OR npm run deploy if using Cloudflare Workers
 ```
-
-- Outputs static assets for deployment (e.g., to Cloudflare Workers, Vercel, Netlify)
 
 ### Build the Backend
 
@@ -203,5 +194,3 @@ npm run build
 
 - **TBA:** Add a production start script once your deployment target is chosen (e.g., Docker, Railway, etc.)
 - You can use Docker Compose for production with a suitable config.
-
----
