@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build:type": "cd server && openapi-ts && cd ../ && npm run build --prefix packages/types",
-    "build:server": "docker compose -f server/docker-compose.dev.yml -p react-fastify-starter-dev up -d --build"
+    "build:server": "docker compose -f server/docker-compose.dev.yml -p react-fastify-starter-dev up -d --build",
+    "postinstall": "npm run build --prefix packages/types"
   },
   "repository": {
     "type": "git",
