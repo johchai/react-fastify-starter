@@ -1,7 +1,6 @@
 # Node
 node_modules/
 dist/
-.env
 *.log
 
 # TypeScript
@@ -21,3 +20,10 @@ db/*.db
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
+
+# Ignore .env and .env.docker anywhere in the repo
+**/.env
+**/.env.docker
+
+# But do NOT ignore these files (negate the patterns)
+!**/.env.example
