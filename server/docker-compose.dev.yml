@@ -2,7 +2,7 @@ services:
   backend:
     container_name: react-fastify-starter-backend-dev
     build:
-      context: ../
+      context: ..
       dockerfile: server/Dockerfile
     networks:
       - react-fastify-starter-net

@@ -1,4 +1,4 @@
-// predefined types
+// user defined shared types
 
 export const RoleEnum = {
   admin: "admin",

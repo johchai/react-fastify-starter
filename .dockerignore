@@ -1,15 +1,2 @@
-# Ignore everything by default
-**
-
-# Allow server folder & package files
-!/server
-!/package.json
-!/package-lock.json
-
-# Inside server, ignore junk
-server/node_modules
-server/dist
-server/.env
-server/.env.*
-server/logs
-server/tests
+node_modules
+.git

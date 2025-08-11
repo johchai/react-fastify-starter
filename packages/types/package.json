@@ -2,6 +2,17 @@
   "name": "@internal/types",
   "version": "1.0.0",
   "private": true,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts"
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "esbuild": "^0.20.0"
+  }
 }

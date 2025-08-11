@@ -1,3 +1,5 @@
+// config for @hey-api/openapi-ts to generate TypeScript types and SDK from OpenAPI spec
+
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
@@ -5,23 +7,23 @@ export default defineConfig({
   output: "../packages/types/src/openapi",
   parser: {
     patch: {
-      version: "3.1.1" // TEMP FIX: https://github.com/hey-api/openapi-ts/issues/2169
-    }
+      version: "3.1.1", // TEMP FIX: https://github.com/hey-api/openapi-ts/issues/2169
+    },
   },
   plugins: [
     {
       name: "@hey-api/client-fetch",
-      exportFromIndex: true
+      exportFromIndex: true,
     },
     {
       name: "@hey-api/sdk",
       auth: true,
       validator: true,
-      exportFromIndex: true
+      exportFromIndex: true,
     },
     {
       name: "@tanstack/react-query",
-      exportFromIndex: true
+      exportFromIndex: true,
     },
 
     {
@@ -30,7 +32,7 @@ export default defineConfig({
       definitions: true,
       compatibilityVersion: 3,
       metadata: true,
-      exportFromIndex: true
-    }
-  ]
+      exportFromIndex: true,
+    },
+  ],
 });

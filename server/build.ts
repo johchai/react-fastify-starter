@@ -9,7 +9,7 @@ esbuild
     target: "node20",
     outfile: "dist/index.js",
     sourcemap: true,
-    external: ["@prisma/client"],
+    external: ["@prisma/client", "@internal/types"],
     plugins: [
       nodeExternalsPlugin({
         packagePath: ["./package.json"]

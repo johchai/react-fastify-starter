@@ -1,7 +1,7 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 
-import { Role } from "@server/types";
+import { Role } from "@internal/types";
 
 declare module "fastify" {
   interface FastifyInstance {

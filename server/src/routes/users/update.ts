@@ -1,8 +1,9 @@
 import { FastifyInstance } from "fastify";
 
 import { BaseError, BaseFail, BaseSuccess } from "@server/lib";
-import { RoleEnum, User } from "@server/types";
+import { User } from "@server/types";
 
+import { RoleEnum } from "@internal/types";
 import { Static, Type } from "@sinclair/typebox";
 
 const Schema = {

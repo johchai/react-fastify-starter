@@ -5,8 +5,7 @@
     "build": "tsx build.ts",
     "dev": "NODE_ENV=development tsx watch ./src/index.ts",
     "dev:studio": "npx prisma studio",
-    "start": "node dist/index.js",
-    "generate:types": "openapi-ts"
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +31,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "0.80.2",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@internal/types": "*",
     "@tsconfig/node14": "^14.1.4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.1.0",

@@ -1,5 +1,6 @@
 import { envSchema } from "@server/lib";
 
+import { Role, RoleEnum } from "@internal/types";
 import { Type } from "@sinclair/typebox";
 import { FromSchema } from "json-schema-to-ts";
 
@@ -14,18 +15,6 @@ export type EnvSchema = FromSchema<typeof envSchema>;
 export interface JWTPayload {
   [key: string]: string | number | boolean | object;
 }
-
-// TODO: move this to @internal/types
-export const RoleEnum = {
-  admin: "admin",
-  editor: "editor",
-  viewer: "viewer"
-} as const;
-
-// TODO: move this to @internal/types
-export type Role =
-  | keyof typeof RoleEnum
-  | (typeof RoleEnum)[keyof typeof RoleEnum];
 
 export interface AccessTokenPayload {
   id: string;
