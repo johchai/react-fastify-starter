@@ -1,10 +1,8 @@
-// user defined shared types
-
-export const RoleEnum = {
-  admin: "admin",
-  editor: "editor",
-  viewer: "viewer",
-} as const;
+export enum RoleEnum {
+  admin = "admin",
+  editor = "editor",
+  viewer = "viewer",
+}
 
 export type Role =
   | keyof typeof RoleEnum

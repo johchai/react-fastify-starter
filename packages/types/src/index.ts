@@ -1,2 +1,5 @@
+// autogen types
 export * from "./openapi";
-export * from "./shared";
+
+// manually added types
+export { RoleEnum, Role } from "./shared";

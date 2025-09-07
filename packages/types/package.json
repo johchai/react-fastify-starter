@@ -1,18 +1,26 @@
 {
   "name": "@internal/types",
-  "version": "1.0.0",
   "private": true,
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js"
+    "build": "rimraf dist && tsc -p tsconfig.json && esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
+    "build:watch": "tsc -w -p tsconfig.json"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "esbuild": "^0.20.0"
+    "esbuild": "^0.20.0",
+    "rimraf": "^6.0.0"
   }
 }
