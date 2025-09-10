@@ -22,7 +22,9 @@ const server = async () => {
     await app.register(fEnv, {
       confKey: "config",
       schema: envSchema,
-      dotenv: true
+      dotenv: {
+        path: ".env.base"
+      }
     });
 
     // enable CORS only for development
