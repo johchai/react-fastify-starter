@@ -2,12 +2,9 @@
 
 A starter full-stack monorepo template for CRUD dashboards and web apps — with a type-safe, dockerized backend (Fastify, TypeScript, PostgreSQL, Prisma), a simple frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
 
-This is just my personal playground for my full-stack projects, nothing serious!
-
 ## 🔧 To-Do
 
 - Add production deployment instructions.
-- Add initial seed user and post.
 
 ---
 
@@ -20,7 +17,7 @@ This is just my personal playground for my full-stack projects, nothing serious!
 - Modern React frontend with Vite
 - PostgreSQL database with Prisma ORM
 - Dockerized local development
-- OpenAPI-driven codegen for shared types
+- OpenAPI-driven codegen for shared types to ensure end-to-end type safety
 
 ---
 
@@ -85,24 +82,27 @@ git clone https://github.com/johchai/react-fastify-starter.git
 cd react-fastify-starter
 ```
 
-2. **Copy and configure environment files:**
+2. **Install Dependencies**
 
-- `server/.env.example` → `server/.env` (set DB connection, JWT secrets, etc.)
-- `client/.env.example` → `client/.env` (set API base URL, etc.)
-
-### Install Dependencies
-
-From the project root:
+This installs dependencies for all workspaces (client, server, shared types).
+From the project root, run:
 
 ```bash
 npm install
 ```
 
-This installs dependencies for all workspaces (client, server, shared types).
+3. **Run Project**
 
-## 5. ⛳ Development Workflow
+This installs dependencies, builds the TypeScript types, and starts the Docker containers for the backend and database.
 
-### Start the Frontend
+```bash
+./server-build.sh
+```
+
+- Fastify server at [http://localhost:4000](http://localhost:4000)
+- Swagger UI at [http://localhost:4000/docs](http://localhost:4000/docs)
+
+4. **Start the Frontend**
 
 ```bash
 cd client
@@ -112,27 +112,7 @@ npm run dev
 
 - Runs Vite dev server at [http://localhost:5173](http://localhost:5173)
 
-### Start the Backend
-
-- **With Docker:**
-
-```bash
-npm run build:server
-```
-
-- **Without Docker:**
-
-```bash
-cd server
-npm run dev
-```
-
-- Fastify server at [http://localhost:4000](http://localhost:4000)
-- Swagger UI at [http://localhost:4000/docs](http://localhost:4000/docs)
-
----
-
-## 6. 📣 API Reference
+## 4. 📣 API Reference
 
 ### Auth Endpoints
 
@@ -149,7 +129,7 @@ npm run dev
 
 ---
 
-## 7. 💬 Frontend Features
+## 5. 💬 Frontend Features
 
 - **Routing:** Managed by React Router (`client/src/app/router.tsx`)
 - **Data Fetching:** React Query hooks for API calls
@@ -158,7 +138,7 @@ npm run dev
 
 ---
 
-## 8. ✏️ Shared Types & OpenAPI
+## 6. ✏️ Shared Types & OpenAPI
 
 - The backend generates an OpenAPI spec using Fastify Swagger.
 - TypeScript types are generated from the OpenAPI spec and placed in `packages/types`.
@@ -173,7 +153,7 @@ npm run build:type
 
 ---
 
-## 9. 📖 Production Deployment
+## 7. 📖 Production Deployment
 
 ### Build the Frontend
 
