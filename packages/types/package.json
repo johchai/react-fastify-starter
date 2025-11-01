@@ -18,9 +18,13 @@
     "build": "rimraf dist && tsc -p tsconfig.json && esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
     "build:watch": "tsc -w -p tsconfig.json"
   },
+  "dependencies": {
+    "@tanstack/react-query": "^5.59.0",
+    "zod": "^4.1.12"
+  },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "esbuild": "^0.20.0",
-    "rimraf": "^6.0.0"
+    "esbuild": "^0.25.11",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.3"
   }
 }

@@ -21,14 +21,14 @@ done
 cd ..
 
 # Step 2: Build shared types
-echo "Building shared types package..."
-cd packages/types || exit 1
-npm run build
-if [ $? -ne 0 ]; then
-  echo "Type build failed. Aborting."
-  exit 1
-fi
-cd ../..
+# echo "Building shared types package..."
+# cd packages/types || exit 1
+# npm run build
+# if [ $? -ne 0 ]; then
+#   echo "Type build failed. Aborting."
+#   exit 1
+# fi
+# cd ../..
 
 # Step 3: Determine environment config
 if [ "$ENV" == "prod" ]; then

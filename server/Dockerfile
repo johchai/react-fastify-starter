@@ -1,7 +1,6 @@
 # --- Base stage ---
-FROM node:23-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
-
 # Copy root package manifests (for workspaces)
 COPY package.json package-lock.json ./
 
@@ -9,31 +8,43 @@ COPY package.json package-lock.json ./
 FROM base AS builder
 WORKDIR /app
 
-# 1. Copy all workspace package.json files (without full source yet)
+# 1. Copy all workspace package.json files
 COPY server/package.json ./server/
 COPY packages/types/package.json ./packages/types/
+COPY packages/types/tsconfig.json ./packages/types/tsconfig.json
 
 # 2. Install all dependencies from root (workspace-aware)
+#    This installs deps for ALL workspaces including types
 RUN npm install
 
-# 3. Now copy the rest of the monorepo source
-COPY . .
+# 3. Copy source for types package
+COPY packages/types/src ./packages/types/src/
 
-# 4. Build only the server
+# 4. Build the shared types package FIRST
+WORKDIR /app/packages/types
+RUN npm run build
+
+# 5. Copy server source and build it
+WORKDIR /app
+COPY server ./server
+
+# 6. Build the server
 WORKDIR /app/server
 RUN npx prisma generate
 RUN npm run build
 
 # --- Production stage ---
-FROM node:23-alpine AS production
+FROM node:24-alpine AS production
 WORKDIR /app
 
 # Copy root manifest so npm knows about workspaces
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 
-# Copy only the workspace packages you need
+# Copy built types package (include dist directory)
 COPY --from=builder /app/packages/types ./packages/types
+
+# Copy built server
 COPY --from=builder /app/server ./server
 
 WORKDIR /app/server
