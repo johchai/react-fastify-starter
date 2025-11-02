@@ -20,11 +20,7 @@ RUN npm install
 # 3. Copy source for types package
 COPY packages/types/src ./packages/types/src/
 
-# 4. Build the shared types package FIRST
-WORKDIR /app/packages/types
-RUN npm run build
-
-# 5. Copy server source and build it
+# 4. Copy server source and build it
 WORKDIR /app
 COPY server ./server
 
@@ -41,7 +37,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 
-# Copy built types package (include dist directory)
+# Copy types package source (TypeScript files are used directly)
 COPY --from=builder /app/packages/types ./packages/types
 
 # Copy built server
@@ -50,6 +46,9 @@ COPY --from=builder /app/server ./server
 WORKDIR /app/server
 RUN npm install --workspace=server
 RUN npx prisma generate
+
+# Install tsx globally so PM2 can find it
+RUN npm install -g tsx
 
 # Process manager
 RUN npm install -g pm2

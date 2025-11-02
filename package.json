@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build:type": "cd server && openapi-ts && cd ../ && npm run build --prefix packages/types"
+    "generate:types": "cd server && npm run generate:types"
   },
   "repository": {
     "type": "git",
