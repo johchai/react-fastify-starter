@@ -2,7 +2,7 @@ import { type JSONSchema } from "json-schema-to-ts";
 
 export const envSchema = {
   type: "object",
-  required: ["ACCESS_TOKEN_SECRET", "REFRESH_TOKEN_SECRET", "PORT"],
+  required: ["ACCESS_TOKEN_SECRET", "REFRESH_TOKEN_SECRET", "SERVER_PORT"],
   properties: {
     NODE_ENV: {
       type: "string",
@@ -11,8 +11,8 @@ export const envSchema = {
     },
     ACCESS_TOKEN_SECRET: { type: "string" },
     REFRESH_TOKEN_SECRET: { type: "string" },
-    PORT: { type: "string" },
-    DOMAIN: { type: "string" },
+    SERVER_PORT: { type: "string" },
+    SERVER_DOMAIN: { type: "string" },
     DATABASE_URL: {
       type: "string"
     }

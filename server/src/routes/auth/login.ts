@@ -61,7 +61,7 @@ export const login = async (fastify: FastifyInstance) => {
         }
 
         reply.setCookie("accessToken", access_token, {
-          //domain: fastify.config.DOMAIN,
+          domain: fastify.config.SERVER_DOMAIN,
           path: "/",
           sameSite: "lax", // or "none" if using HTTPS
           secure: false, // set to true in production
@@ -70,7 +70,7 @@ export const login = async (fastify: FastifyInstance) => {
         });
 
         reply.setCookie("refreshToken", refresh_token, {
-          //domain: fastify.config.DOMAIN,
+          domain: fastify.config.SERVER_DOMAIN,
           path: "/",
           sameSite: "lax", // or "none" if using HTTPS
           secure: false, // set to true in production

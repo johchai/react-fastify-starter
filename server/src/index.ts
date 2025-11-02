@@ -23,7 +23,7 @@ const server = async () => {
       confKey: "config",
       schema: envSchema,
       dotenv: {
-        path: ".env.base"
+        path: ".env"
       }
     });
 
@@ -64,11 +64,11 @@ const server = async () => {
 
     // start server
     await app.listen({
-      port: Number(app.config.PORT),
+      port: Number(app.config.SERVER_PORT),
       host: "0.0.0.0"
     });
     console.log(
-      `Server running at http://${app.config.DOMAIN}:${app.config.PORT}`
+      `Server running at http://${app.config.SERVER_DOMAIN}:${app.config.SERVER_PORT}`
     );
   } catch (err) {
     app.log.error(err);

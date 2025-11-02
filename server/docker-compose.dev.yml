@@ -13,30 +13,37 @@ services:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_NAME: react_fastify_starter
-      DATABASE_USERNAME: react_fastify_starter
-      DATABASE_PASSWORD: YOUR_SUPER_DUPER_PASSWORD
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}
+
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file:
-      - path: .env.base
-      - path: .env.docker
+      - .env
 
   postgres:
     container_name: react-fastify-starter-postgres-dev
     image: postgres:16
     env_file:
-      - path: .env.docker
+      - .env
     environment:
-      - POSTGRES_PASSWORD=YOUR_SUPER_DUPER_PASSWORD
-      - POSTGRES_USER=react_fastify_starter
-      - POSTGRES_DB=react_fastify_starter
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - react-fastify-starter-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
 
 volumes:
   db:

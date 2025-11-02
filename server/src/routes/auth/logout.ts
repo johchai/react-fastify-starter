@@ -21,7 +21,6 @@ export const logout = async (fastify: FastifyInstance) => {
     },
     async (request, reply) => {
       reply.setCookie("accessToken", "", {
-        //domain: fastify.config.DOMAIN,
         path: "/",
         sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
         secure: fastify.config.NODE_ENV === "production",
@@ -29,7 +28,6 @@ export const logout = async (fastify: FastifyInstance) => {
       });
 
       reply.setCookie("refreshToken", "", {
-        //domain: fastify.config.DOMAIN,
         path: "/",
         sameSite: fastify.config.NODE_ENV === "production" ? "none" : "lax",
         secure: fastify.config.NODE_ENV === "production",

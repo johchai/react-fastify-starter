@@ -60,7 +60,7 @@ export const refresh = async (fastify: FastifyInstance) => {
 
         // Set cookies for access and refresh tokens
         reply.setCookie("accessToken", accessToken, {
-          domain: fastify.config.DOMAIN,
+          domain: fastify.config.SERVER_DOMAIN,
           path: "/",
           secure: fastify.config.NODE_ENV === "production",
           httpOnly: true,
@@ -68,7 +68,7 @@ export const refresh = async (fastify: FastifyInstance) => {
           maxAge: 15 * 60 // 15 minutes
         });
         reply.setCookie("refreshToken", refreshToken, {
-          domain: fastify.config.DOMAIN,
+          domain: fastify.config.SERVER_DOMAIN,
           path: "/",
           secure: fastify.config.NODE_ENV === "production",
           httpOnly: true,

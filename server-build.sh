@@ -7,7 +7,7 @@ read ENV
 echo "Setting up environment files..."
 cd server || exit 1
 
-for FILE in .env.base .env.docker .env.local; do
+for FILE in .env; do
   if [ ! -f "$FILE" ] && [ -f "$FILE.example" ]; then
     cp "$FILE.example" "$FILE"
     echo "Created $FILE from $FILE.example"
@@ -34,16 +34,11 @@ cd ..
 if [ "$ENV" == "prod" ]; then
   echo "⚠️  Production mode is not supported yet. Please use 'dev' instead."
   exit 1
-# if [ "$ENV" == "prod" ]; then
-#   FILE="docker-compose.prod.yml"
-#   PROJECT="react-fastify-starter-prod"
-#   CMD="docker compose -f $FILE -p $PROJECT up -d --build"
-#   ENV_FILES="-e .env.base -e .env.docker"
 elif [ "$ENV" == "dev" ]; then
   FILE="server/docker-compose.dev.yml"
   PROJECT="react-fastify-starter-dev"
   CMD="docker compose -f $FILE -p $PROJECT up -d --build"
-  ENV_FILES="-e .env.base -e .env.local"
+  ENV_FILES="-e .env"
 else
   echo "Invalid option. Please choose 'prod' or 'dev'."
   exit 1
@@ -57,9 +52,9 @@ if [ $? -eq 0 ]; then
   echo "Docker started successfully. Running Prisma migration..."
   (
     cd server || exit 1
-    npx dotenv $ENV_FILES -- npx prisma migrate dev --name init
+    npx prisma migrate dev --name init
     if [ $? -ne 0 ]; then
-      echo "❌ Prisma migration failed. Skipping seed script."
+      echo "❌ Pyisma migration failed. Skipping seed script."
       exit 1
     fi
 

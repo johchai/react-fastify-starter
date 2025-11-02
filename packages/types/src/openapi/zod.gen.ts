@@ -2,6 +2,12 @@
 
 import { z } from 'zod/v3';
 
+export const zGetData = z.object({
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
+});
+
 export const zGetApiAuthMeData = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
