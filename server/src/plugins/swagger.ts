@@ -10,7 +10,7 @@ export const swaggerPlugin: FastifyPluginAsync = fp(async (server) => {
     openapi: {
       info: {
         title: "React Fastify Starter",
-        version: "0.1.0"
+        version: "1.0.0"
       }
     }
   });

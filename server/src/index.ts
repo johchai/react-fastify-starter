@@ -36,11 +36,28 @@ const server = async () => {
 
     // register plugins and middleware
     await app.register(fCookie);
-    await app.register(swaggerPlugin);
     await app.register(replyPlugin);
     await app.register(jwtPlugin);
     await app.register(guardPlugin);
     await app.register(prismaPlugin);
+
+    if (app.config.NODE_ENV === "development") {
+      await app.register(swaggerPlugin);
+      app.log.info("Swagger documentation enabled at /docs");
+    } else {
+      app.log.info("Swagger documentation is disabled in production");
+    }
+
+    // default routes
+    app.get("/", async (_req, reply) => {
+      const baseMessage = "Welcome to the React Fastify Starter API.";
+      const docsMessage =
+        process.env.NODE_ENV !== "production"
+          ? "Available endpoints in /docs."
+          : "Docs are disabled in production.";
+
+      reply.send({ message: `${baseMessage} ${docsMessage}` });
+    });
 
     // routes entry point
     app.register(routes, { prefix: "/api" });
