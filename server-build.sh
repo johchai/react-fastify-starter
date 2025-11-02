@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "Which environment do you want to run? (prod/dev)"
 read ENV
@@ -20,55 +21,71 @@ done
 
 cd ..
 
-# Step 2: Build shared types
-# echo "Building shared types package..."
-# cd packages/types || exit 1
-# npm run build
-# if [ $? -ne 0 ]; then
-#   echo "Type build failed. Aborting."
-#   exit 1
-# fi
-# cd ../..
-
-# Step 3: Determine environment config
+# Step 2: Determine environment config
 if [ "$ENV" == "prod" ]; then
-  echo "⚠️  Production mode is not supported yet. Please use 'dev' instead."
-  exit 1
+  FILE="server/docker-compose.prod.yml"
+  PROJECT="react-fastify-starter-prod"
+  CMD="docker compose -f $FILE -p $PROJECT up -d --build"
 elif [ "$ENV" == "dev" ]; then
   FILE="server/docker-compose.dev.yml"
   PROJECT="react-fastify-starter-dev"
   CMD="docker compose -f $FILE -p $PROJECT up -d --build"
-  ENV_FILES="-e .env"
 else
   echo "Invalid option. Please choose 'prod' or 'dev'."
   exit 1
 fi
 
-# Step 4: Run Docker
+# Step 3: Run Docker
 echo "Running: $CMD"
 $CMD
 
 if [ $? -eq 0 ]; then
-  echo "Docker started successfully. Running Prisma migration..."
+  echo "Docker started successfully."
+  
+  # Step 4: Database setup
   (
     cd server || exit 1
-    npx prisma migrate dev --name init
-    if [ $? -ne 0 ]; then
-      echo "❌ Pyisma migration failed. Skipping seed script."
-      exit 1
+    
+    if [ "$ENV" == "prod" ]; then
+      echo "Running Prisma migration deploy (production)..."
+      npx prisma migrate deploy
+      
+      if [ $? -eq 0 ]; then
+        echo "Production migrations applied successfully."
+      else
+        echo "Prisma migration deploy failed."
+        exit 1
+      fi
+      
+    elif [ "$ENV" == "dev" ]; then
+      echo "Running Prisma migration (development)..."
+      npx prisma migrate dev --name init
+      
+      if [ $? -ne 0 ]; then
+        echo "Prisma migration failed. Skipping seed script."
+        exit 1
+      fi
     fi
-
+    
+    # Prompt for seed in both environments
     echo "Do you want to run the seed script? (y/n)"
     read SEED
 
-    if [ "$SEED" == "y" ] || [ "$SEED" == "Y" ]; then
+    if [[ "$SEED" =~ ^[Yy]$ ]]; then
       echo "Running seed script..."
-      npx dotenv $ENV_FILES -- npx tsx prisma/seed.ts
+      npx tsx prisma/seed.ts
+      if [ $? -eq 0 ]; then
+        echo "Seed completed successfully."
+      else
+        echo "Seed script failed."
+      fi
     else
       echo "Skipping seed script."
     fi
   )
+  
+  echo "✅ Setup complete!"
 else
-  echo "Docker failed. Aborting."
+  echo "❌ Docker failed to start. Aborting."
   exit 1
 fi

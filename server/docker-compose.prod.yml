@@ -1,0 +1,54 @@
+services:
+  backend:
+    container_name: react-fastify-starter-backend-prod
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    networks:
+      - react-fastify-starter-net
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  postgres:
+    container_name: react-fastify-starter-postgres-prod
+    image: postgres:16
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - react-fastify-starter-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db:
+    name: react-fastify-starter-db-prod
+
+networks:
+  react-fastify-starter-net:
+    driver: bridge

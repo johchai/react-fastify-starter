@@ -1,10 +1,6 @@
-# ✨ React Fastify Starter (WIP)
+# ✨ React Fastify Starter
 
-A starter full-stack monorepo template for CRUD dashboards and web apps — with a type-safe, dockerized backend (Fastify, TypeScript, PostgreSQL, Prisma), a simple frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
-
-## 🔧 To-Do
-
-- Add production deployment instructions.
+A starter full-stack docker monorepo template for CRUD dashboards and web apps — with a type-safe, backend (Fastify, TypeScript, PostgreSQL, Prisma), a simple frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
 
 ---
 
@@ -39,11 +35,14 @@ A starter full-stack monorepo template for CRUD dashboards and web apps — with
 - **Tailwind CSS**: Utility-first styling
 - **Cloudflare Workers**: (Optional) Edge deployment
 
+**Authentication:**
+
+- **JWT**: Token stored in HTTP-only cookies
+
 **Tooling:**
 
 - **Docker**: Containerized development
 - **npm workspaces**: Monorepo management
-- **OpenAPI codegen**: Shared TypeScript types
 
 ---
 
@@ -93,26 +92,27 @@ npm install
 
 3. **Run Project**
 
-This installs dependencies, builds the TypeScript types, and starts the Docker containers for the backend and database.
+This installs dependencies, copies the server .env, and starts the Docker containers for the backend and database.
 
 ```bash
+# Which environment do you want to run? (prod/dev) - `dev`
 ./server-build.sh
 ```
 
 - Fastify server at [http://localhost:4000](http://localhost:4000)
-- Swagger UI at [http://localhost:4000/docs](http://localhost:4000/docs)
+- Swagger UI (only in dev mode) at [http://localhost:4000/docs](http://localhost:4000/docs)
 
 4. **Start the Frontend**
 
 ```bash
 cd client
-npm install # if not already done
+cp .env.example .env
 npm run dev
 ```
 
 - Runs Vite dev server at [http://localhost:5173](http://localhost:5173)
 
-## 4. 📣 API Reference
+## 5. 📣 API Reference
 
 ### Auth Endpoints
 
@@ -129,26 +129,18 @@ npm run dev
 
 ---
 
-## 5. 💬 Frontend Features
-
-- **Routing:** Managed by React Router (`client/src/app/router.tsx`)
-- **Data Fetching:** React Query hooks for API calls
-- **Styling:** Tailwind CSS utility classes
-- **Authentication:** JWT stored in HTTP-only cookies
-
----
-
 ## 6. ✏️ Shared Types & OpenAPI
 
 - The backend generates an OpenAPI spec using Fastify Swagger.
 - TypeScript types are generated from the OpenAPI spec and placed in `packages/types`.
 - Both client and server import these types for end-to-end type safety.
+- Any route changes in the backend should be followed by regenerating the types.
 
 **Regenerate types after API changes:**
 
 ```bash
+# regenerate TypeScript types - server has to be built first and running in dev mode
 npm run build:type
-# This runs openapi-ts in server/ and updates packages/types
 ```
 
 ---
@@ -168,9 +160,6 @@ npm run build
 ### Build the Backend
 
 ```bash
-cd server
-npm run build
+# Which environment do you want to run? (prod/dev) - `prod`
+./server-build.sh
 ```
-
-- **TBA:** Add a production start script once your deployment target is chosen (e.g., Docker, Railway, etc.)
-- You can use Docker Compose for production with a suitable config.
