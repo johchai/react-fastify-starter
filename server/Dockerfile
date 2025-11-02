@@ -48,7 +48,7 @@ COPY --from=builder /app/packages/types ./packages/types
 COPY --from=builder /app/server ./server
 
 WORKDIR /app/server
-RUN npm install --omit=dev --workspace=server
+RUN npm install --workspace=server
 RUN npx prisma generate
 
 # Process manager
