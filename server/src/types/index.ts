@@ -1,6 +1,6 @@
 import { envSchema } from "@server/lib";
 
-import { Role, RoleEnum } from "@internal/types";
+import { Role } from "@internal/types";
 import { Type } from "@sinclair/typebox";
 import { FromSchema } from "json-schema-to-ts";
 
@@ -55,7 +55,7 @@ export const User = Type.Object({
   id: Type.String(),
   name: Type.String(),
   email: Type.String({ format: "email" }),
-  role: Type.Enum(RoleEnum),
+  role: Type.Enum(Role),
   created_at: Type.String({ format: "date-time" }),
   deleted_at: Type.Union([Type.String({ format: "date-time" }), Type.Null()])
 });

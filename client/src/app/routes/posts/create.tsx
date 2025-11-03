@@ -1,4 +1,3 @@
-// import { useGetPosts } from "@client/features";
 import { CreatePost } from "@client/features";
 
 const CreateRoute = () => {

@@ -19,7 +19,7 @@ export const useUpdatePost = (params?: {
   return useMutation({
     ...base,
     ...(params?.mutationConfig ?? {}),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, context, mutation) => {
       // 1. invalidate posts list
       queryClient.invalidateQueries({ queryKey: getPostsQueryKey() });
 
@@ -32,7 +32,7 @@ export const useUpdatePost = (params?: {
       }
 
       // 3. call user provide a onSuccess
-      userOnSuccess?.(data, variables, context);
+      userOnSuccess?.(data, variables, context, mutation);
     }
   });
 };

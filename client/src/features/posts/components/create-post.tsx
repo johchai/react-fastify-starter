@@ -8,10 +8,9 @@ import { paths } from "@client/config";
 import { useCreatePost } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPostApiPostsData } from "@internal/types";
+import { type PostApiPostsData, zPostApiPostsData } from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import type z from "zod";
 
 export const CreatePost = () => {
   const navigate = useNavigate();
@@ -19,13 +18,13 @@ export const CreatePost = () => {
   const createPostMutation = useCreatePost({
     mutationConfig: {
       onSuccess: () => {
-        console.log("Post created successfully");
+        console.debug("Post created successfully");
         navigate(paths.posts.root.getHref());
       }
     }
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof zPostApiPostsData>> = (data) => {
+  const onSubmit: SubmitHandler<Omit<PostApiPostsData, "url">> = (data) => {
     createPostMutation.mutate({
       body: {
         title: data.body.title,
@@ -34,7 +33,7 @@ export const CreatePost = () => {
     });
   };
 
-  const form = useForm<z.infer<typeof zPostApiPostsData>>({
+  const form = useForm<Omit<PostApiPostsData, "url">>({
     resolver: zodResolver(zPostApiPostsData),
     defaultValues: {
       body: {

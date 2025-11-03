@@ -21,7 +21,7 @@
     "@fastify/jwt": "^9.1.0",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.3",
-    "@fastify/type-provider-typebox": "^5.2.0",
+    "@fastify/type-provider-typebox": "^6.1.0",
     "@internal/types": "*",
     "@prisma/client": "^6.13.0",
     "@sinclair/typebox": "^0.34.38",
@@ -34,7 +34,7 @@
     "tsx": "^4.19.3"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "0.80.2",
+    "@hey-api/openapi-ts": "^0.86.11",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@tsconfig/node14": "^14.1.4",
     "@types/bcrypt": "^6.0.0",

@@ -12,9 +12,11 @@ import {
 import { useLogin } from "@client/lib";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPostApiAuthLoginData } from "@internal/types";
+import {
+  type PostApiAuthLoginData,
+  zPostApiAuthLoginData
+} from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import z from "zod";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -37,9 +39,7 @@ export const LoginForm = (props: LoginFormProps) => {
     }
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof zPostApiAuthLoginData>> = (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<Omit<PostApiAuthLoginData, "url">> = (data) => {
     setIsLoading(true);
     loginMutation.mutate({
       email: data.body.email,
@@ -47,7 +47,7 @@ export const LoginForm = (props: LoginFormProps) => {
     });
   };
 
-  const form = useForm<z.infer<typeof zPostApiAuthLoginData>>({
+  const form = useForm<Omit<PostApiAuthLoginData, "url">>({
     resolver: zodResolver(zPostApiAuthLoginData),
     defaultValues: {
       body: {

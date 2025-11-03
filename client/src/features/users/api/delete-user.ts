@@ -19,7 +19,7 @@ export const useDeleteUser = (params?: {
   return useMutation({
     ...base,
     ...(params?.mutationConfig ?? {}),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, context, mutation) => {
       // 1. invalidate users list
       queryClient.invalidateQueries({ queryKey: getUsersQueryKey() });
 
@@ -32,7 +32,7 @@ export const useDeleteUser = (params?: {
       }
 
       // 3. call user provide a onSuccess
-      userOnSuccess?.(data, variables, context);
+      userOnSuccess?.(data, variables, context, mutation);
     }
   });
 };

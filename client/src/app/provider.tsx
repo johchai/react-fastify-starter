@@ -1,7 +1,5 @@
 import { Suspense, useState } from "react";
 
-import { queryConfig } from "@client/lib";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ErrorBoundary } from "react-error-boundary";
@@ -18,7 +16,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: queryConfig
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            retry: false,
+            staleTime: 1000 * 60
+          }
+        }
       })
   );
 

@@ -8,10 +8,13 @@ import { paths } from "@client/config";
 import { useDeleteUser, useGetUser, useUpdateUser } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RoleEnum, zPatchApiUsersByIdData } from "@internal/types";
+import {
+  type PatchApiUsersByIdData,
+  RoleEnum,
+  zPatchApiUsersByIdData
+} from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import type z from "zod";
 
 type UpdateUserProps = {
   userID: string;
@@ -23,14 +26,14 @@ export const UpdateUser = ({ userID }: UpdateUserProps) => {
   const updateUserMutation = useUpdateUser({
     mutationConfig: {
       onSuccess: () => {
-        console.log("User updated successfully");
+        console.debug("User updated successfully");
       }
     }
   });
   const deleteUserMutation = useDeleteUser({
     mutationConfig: {
       onSuccess: () => {
-        console.log("User deleted successfully");
+        console.debug("User deleted successfully");
         navigate(paths.users.root.getHref());
       }
     }
@@ -40,7 +43,7 @@ export const UpdateUser = ({ userID }: UpdateUserProps) => {
     path: { id: userID }
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof zPatchApiUsersByIdData>> = (
+  const onSubmit: SubmitHandler<Omit<PatchApiUsersByIdData, "url">> = (
     data
   ) => {
     updateUserMutation.mutate({
@@ -54,7 +57,7 @@ export const UpdateUser = ({ userID }: UpdateUserProps) => {
     });
   };
 
-  const form = useForm<z.infer<typeof zPatchApiUsersByIdData>>({
+  const form = useForm<Omit<PatchApiUsersByIdData, "url">>({
     resolver: zodResolver(zPatchApiUsersByIdData),
     defaultValues: {
       body: {

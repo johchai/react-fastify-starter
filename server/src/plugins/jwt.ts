@@ -35,7 +35,7 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.ACCESS_TOKEN_SECRET,
     sign: {
-      expiresIn: "15m" // Short-lived access tokens
+      expiresIn: "15m"
     },
     cookie: {
       cookieName: "accessToken",
@@ -50,7 +50,7 @@ export const jwtPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyJWT, {
     secret: server.config.REFRESH_TOKEN_SECRET,
     sign: {
-      expiresIn: "1d" // Longer-lived refresh tokens
+      expiresIn: "1d"
     },
     cookie: {
       cookieName: "refreshToken",

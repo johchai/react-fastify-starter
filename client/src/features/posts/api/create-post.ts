@@ -19,12 +19,12 @@ export const useCreatePost = (params?: {
   return useMutation({
     ...base,
     ...(params?.mutationConfig ?? {}),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, context, mutation) => {
       // Invalidate posts list to get updated list including new post
       queryClient.invalidateQueries({ queryKey: getPostsQueryKey() });
 
       // Call user-provided onSuccess if any
-      userOnSuccess?.(data, variables, context);
+      userOnSuccess?.(data, variables, context, mutation);
     }
   });
 };

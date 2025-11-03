@@ -112,7 +112,7 @@ export const zPostApiAuthLogoutResponse = z.object({
         'success'
     ]),
     message: z.string(),
-    data: z.object({}),
+    data: z.record(z.unknown()),
     timestamp: z.string().datetime()
 }).describe('Default Response');
 

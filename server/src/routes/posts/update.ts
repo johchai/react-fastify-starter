@@ -58,8 +58,6 @@ export const updatePost = async (fastify: FastifyInstance) => {
           }
         });
 
-        // TODO: have a more specific error message for not found
-
         return reply.sendSuccess<Static<typeof Schema.Response>["data"]>(
           "Post updated successfully",
           {

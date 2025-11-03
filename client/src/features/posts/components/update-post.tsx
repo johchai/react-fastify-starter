@@ -8,10 +8,12 @@ import { paths } from "@client/config";
 import { useDeletePost, useGetPost, useUpdatePost } from "@client/features";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { zPatchApiPostsByIdData } from "@internal/types";
+import {
+  type PatchApiPostsByIdData,
+  zPatchApiPostsByIdData
+} from "@internal/types";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import type z from "zod";
 
 type UpdatePostProps = {
   postID: string;
@@ -23,14 +25,14 @@ export const UpdatePost = ({ postID }: UpdatePostProps) => {
   const updatePostMutation = useUpdatePost({
     mutationConfig: {
       onSuccess: () => {
-        console.log("Post updated successfully");
+        console.debug("Post updated successfully");
       }
     }
   });
   const deletePostMutation = useDeletePost({
     mutationConfig: {
       onSuccess: () => {
-        console.log("Post deleted successfully");
+        console.debug("Post deleted successfully");
         navigate(paths.posts.root.getHref());
       }
     }
@@ -40,7 +42,7 @@ export const UpdatePost = ({ postID }: UpdatePostProps) => {
     path: { id: postID }
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof zPatchApiPostsByIdData>> = (
+  const onSubmit: SubmitHandler<Omit<PatchApiPostsByIdData, "url">> = (
     data
   ) => {
     updatePostMutation.mutate({
@@ -52,7 +54,7 @@ export const UpdatePost = ({ postID }: UpdatePostProps) => {
     });
   };
 
-  const form = useForm<z.infer<typeof zPatchApiPostsByIdData>>({
+  const form = useForm<Omit<PatchApiPostsByIdData, "url">>({
     resolver: zodResolver(zPatchApiPostsByIdData),
     defaultValues: {
       body: {

@@ -17,12 +17,12 @@ export default defineConfig({
     {
       name: "@hey-api/sdk",
       auth: true,
-      validator: true,
       exportFromIndex: true
     },
     {
       name: "@tanstack/react-query",
-      exportFromIndex: true
+      exportFromIndex: true,
+      metadata: true
     },
     {
       name: "zod",
