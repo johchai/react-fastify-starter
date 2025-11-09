@@ -47,22 +47,22 @@ if [ $? -eq 0 ]; then
     cd server || exit 1
     
     if [ "$ENV" == "prod" ]; then
-      echo "Running Prisma migration deploy (production)..."
-      npx prisma migrate deploy
+      echo "Pushing Prisma schema to production database..."
+      npx prisma db push
       
       if [ $? -eq 0 ]; then
-        echo "Production migrations applied successfully."
+        echo "✅ Prisma db push completed successfully."
       else
-        echo "Prisma migration deploy failed."
+        echo "❌ Prisma db push failed."
         exit 1
       fi
-      
+
     elif [ "$ENV" == "dev" ]; then
       echo "Running Prisma migration (development)..."
       npx prisma migrate dev --name init
       
       if [ $? -ne 0 ]; then
-        echo "Prisma migration failed. Skipping seed script."
+        echo "❌ Prisma migration failed. Skipping seed script."
         exit 1
       fi
     fi
@@ -75,9 +75,9 @@ if [ $? -eq 0 ]; then
       echo "Running seed script..."
       npx tsx prisma/seed.ts
       if [ $? -eq 0 ]; then
-        echo "Seed completed successfully."
+        echo "✅ Seed completed successfully."
       else
-        echo "Seed script failed."
+        echo "❌ Seed script failed."
       fi
     else
       echo "Skipping seed script."

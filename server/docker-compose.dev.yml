@@ -11,7 +11,6 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_CLIENT: postgres
-      DATABASE_HOST: postgres
       DATABASE_PORT: 5432
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}

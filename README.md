@@ -163,5 +163,6 @@ npm run build
 
 ```bash
 # Which environment do you want to run? (prod/dev) - `prod`
+# Make sure the .env's variables are set with external DB connection (e.g. supabase).
 ./server-build.sh
 ```
