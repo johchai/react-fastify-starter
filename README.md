@@ -1,3 +1,5 @@
+![screenshot](.github/preview.png)
+
 # ✨ React Fastify Starter
 
 A starter full-stack docker monorepo template for CRUD dashboards and web apps — with a type-safe, backend (Fastify, TypeScript, PostgreSQL, Prisma), a simple frontend (React, Vite, Tailwind CSS), and OpenAPI-powered type sharing.
